@@ -12,7 +12,18 @@ export const metadata = {
     locale: "ja_JP",
     type: "website"
   },
-  twitter: { card: "summary_large_image" }
+  twitter: { card: "summary_large_image" },
+  alternates: { canonical: "https://playotoron.com/blog" },
+  other: {
+    "link:alternate:rss": [
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        title: "オトロン公式ブログ",
+        href: "https://playotoron.com/blog/rss"
+      }
+    ]
+  }
 };
 
 export default function RootLayout({ children }) {

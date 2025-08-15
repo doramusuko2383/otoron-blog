@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
   const url = `${BASE}/blog/posts/${p.slug}`;
-  const og = p.ogImage || "/ogp.png";
+  const og = p.ogImage || `/og/${p.slug}`;
   return {
     title,
     description: p.description,
@@ -43,7 +43,7 @@ export default async function PostPage({ params }) {
   const url = `${BASE}/blog/posts/${p.slug}`;
   const ogAbs = p.ogImage?.startsWith("http")
     ? p.ogImage
-    : `${BASE}${p.ogImage || "/ogp.png"}`;
+    : `${BASE}${p.ogImage || `/og/${p.slug}`}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -56,6 +56,14 @@ export default async function PostPage({ params }) {
     publisher: { "@type": "Organization", name: "OTORON" },
     mainEntityOfPage: url
   };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "ブログ", item: "https://playotoron.com/blog" },
+      { "@type": "ListItem", position: 2, name: p.title, item: url }
+    ]
+  };
 
   return (
     <article className="post">
@@ -63,6 +71,7 @@ export default async function PostPage({ params }) {
       <h1>{p.title}</h1>
       <div className="meta">{new Date(p.date).toLocaleDateString("ja-JP")}</div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </article>
   );
