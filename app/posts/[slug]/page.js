@@ -1,6 +1,5 @@
 import { getAllPosts, getPost, getPrevNext } from "../../../lib/posts";
-import { remark } from "remark";
-import html from "remark-html";
+import { renderMarkdown } from "../../../lib/markdown";
 
 const BASE = "https://playotoron.com"; // 1か所に集約
 
@@ -46,8 +45,7 @@ export default async function PostPage({ params }) {
 
   const { prev, next } = getPrevNext(p.slug);
 
-  const processed = await remark().use(html).process(p.content);
-  const contentHtml = processed.toString();
+  const { html: contentHtml } = await renderMarkdown(p.content);
 
   const url = `${BASE}/blog/posts/${p.slug}`;
   const ogAbs = p.ogImage?.startsWith("http")
