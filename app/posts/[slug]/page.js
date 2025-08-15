@@ -1,4 +1,4 @@
-import { getAllPosts, getPost } from "../../../lib/posts";
+import { getAllPosts, getPost, getPrevNext } from "../../../lib/posts";
 import { remark } from "remark";
 import html from "remark-html";
 
@@ -29,13 +29,22 @@ export async function generateMetadata({ params }) {
       publishedTime: p.date,
       modifiedTime: p.updated ?? p.date
     },
-    twitter: { card: "summary_large_image" }
+    twitter: { card: "summary_large_image" },
+    robots: p.draft ? { index: false, follow: false } : undefined
   };
+}
+
+function readingTime(text) {
+  const wpm = 400;
+  const words = text.replace(/\s+/g, "").length;
+  return Math.max(1, Math.round(words / wpm)) + "分";
 }
 
 export default async function PostPage({ params }) {
   const p = getPost(params.slug);
   if (!p) return <div>Not found</div>;
+
+  const { prev, next } = getPrevNext(p.slug);
 
   const processed = await remark().use(html).process(p.content);
   const contentHtml = processed.toString();
@@ -69,10 +78,17 @@ export default async function PostPage({ params }) {
     <article className="post">
       <a href="/blog" className="meta">← 記事一覧へ</a>
       <h1>{p.title}</h1>
-      <div className="meta">{new Date(p.date).toLocaleDateString("ja-JP")}</div>
+      <div className="meta">
+        {new Date(p.date).toLocaleDateString("ja-JP")}
+        {" ・ 読了目安: "}{readingTime(p.content)}
+      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <nav className="pn">
+        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
+        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
+      </nav>
     </article>
   );
 }
