@@ -21,3 +21,93 @@ kbd{background:#f6f6f6;border:1px solid #e4e4e7;border-bottom-width:2px;border-r
 .toc li.d3{margin-left:16px}
 .post :is(h2,h3) .anchor{margin-left:6px;text-decoration:none;opacity:.4}
 .post :is(h2,h3):hover .anchor{opacity:.9}
+html {
+  scroll-behavior: smooth; /* TOCクリックで滑らかスクロール */
+}
+
+/* 記事本文の余白とコード・表の最低限スタイル */
+.prose pre {
+  overflow: auto;
+  padding: 1rem;
+  border-radius: .5rem;
+  background: #0b0b0c;
+  color: #f5f5f5;
+}
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: .95em;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.prose th, .prose td {
+  border: 1px solid rgba(0,0,0,.08);
+  padding: .5rem .75rem;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* TOC 共通 */
+.toc,
+.toc-wrap {
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.toc a,
+.toc-link {
+  text-decoration: none;
+}
+.toc a:hover,
+.toc-link:hover {
+  text-decoration: underline;
+}
+
+/* モバイル：記事上部の折りたたみ目次 */
+.toc-mobile {
+  display: block;
+  margin: 0 0 1rem;
+}
+.toc-details {
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: .5rem;
+  padding: .5rem .75rem;
+  background: #fff;
+}
+.toc-summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* PC：サイド固定レイアウト */
+.post-body-with-toc {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+}
+.toc-aside {
+  position: sticky;
+  top: 88px;               /* ヘッダー高に合わせて調整 */
+  height: max-content;
+  align-self: start;
+  border-left: 2px solid rgba(0,0,0,.06);
+  padding-left: 1rem;
+}
+
+/* スマホではサイドTOCを非表示、上部TOCのみ */
+@media (max-width: 1024px) {
+  .post-body-with-toc {
+    display: block;
+  }
+  .toc-aside {
+    display: none;
+  }
+}
+
+/* 見出しにアンカーで飛んだ時に被らないよう余白確保 */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  scroll-margin-top: 84px; /* ヘッダー固定時の被り防止 */
+}

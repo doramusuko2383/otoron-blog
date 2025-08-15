@@ -7,7 +7,7 @@ export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }: { params: { slug: string } }) {
   const p = getPost(params.slug);
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
@@ -33,20 +33,19 @@ export async function generateMetadata({ params }) {
   };
 }
 
-function readingTime(text) {
+function readingTime(text: string) {
   const wpm = 400;
   const words = text.replace(/\s+/g, "").length;
   return Math.max(1, Math.round(words / wpm)) + "分";
 }
 
-export default async function PostPage({ params }) {
+export default async function PostPage({ params }: { params: { slug: string } }) {
   const p = getPost(params.slug);
   if (!p) return <div>Not found</div>;
 
   const { prev, next } = getPrevNext(p.slug);
 
   const { html, toc } = await renderMarkdown(p.content);
-  const contentHtml = html;
 
   const url = `${BASE}/blog/posts/${p.slug}`;
   const ogAbs = p.ogImage?.startsWith("http")
@@ -83,19 +82,28 @@ export default async function PostPage({ params }) {
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-      {toc.length > 0 && (
-        <aside className="toc">
-          <div className="toc-title">目次</div>
-          <ul>
-            {toc.map(i => (
-              <li key={i.id} className={`d${i.depth}`}>
-                <a href={`#${i.id}`}>{i.value}</a>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      )}
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+
+      {/* スマホ：上部に目次（必要なら details で折りたたみ） */}
+      <div className="toc-mobile">
+        {toc ? (
+          <details open className="toc-details">
+            <summary className="toc-summary">目次</summary>
+            <div className="toc-wrap" dangerouslySetInnerHTML={{ __html: toc }} />
+          </details>
+        ) : null}
+      </div>
+
+      <div className="post-body-with-toc">
+        {/* PC：サイド固定の目次 */}
+        {toc ? (
+          <aside className="toc-aside" aria-label="目次">
+            <div dangerouslySetInnerHTML={{ __html: toc }} />
+          </aside>
+        ) : null}
+
+        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+      </div>
+
       <nav className="pn">
         {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
         {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
