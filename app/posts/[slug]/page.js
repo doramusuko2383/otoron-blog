@@ -1,5 +1,5 @@
-import { getAllPosts, getPost, getPrevNext } from "../../../lib/posts";
-import { renderMarkdown } from "../../../lib/markdown";
+import { getAllPosts, getPost, getPrevNext } from "@/lib/posts";
+import { renderMarkdown } from "@/lib/markdown";
 
 const BASE = "https://playotoron.com"; // 1か所に集約
 
@@ -45,7 +45,8 @@ export default async function PostPage({ params }) {
 
   const { prev, next } = getPrevNext(p.slug);
 
-  const { html: contentHtml } = await renderMarkdown(p.content);
+  const { html, toc } = await renderMarkdown(p.content);
+  const contentHtml = html;
 
   const url = `${BASE}/blog/posts/${p.slug}`;
   const ogAbs = p.ogImage?.startsWith("http")
@@ -82,6 +83,18 @@ export default async function PostPage({ params }) {
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      {toc.length > 0 && (
+        <aside className="toc">
+          <div className="toc-title">目次</div>
+          <ul>
+            {toc.map(i => (
+              <li key={i.id} className={`d${i.depth}`}>
+                <a href={`#${i.id}`}>{i.value}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
       <nav className="pn">
         {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
