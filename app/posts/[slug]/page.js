@@ -2,6 +2,8 @@ import { getAllPosts, getPost } from "../../../lib/posts";
 import { remark } from "remark";
 import html from "remark-html";
 
+const BASE = "https://playotoron.com"; // 1か所に集約
+
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }));
 }
@@ -10,12 +12,23 @@ export async function generateMetadata({ params }) {
   const p = getPost(params.slug);
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
-  const url = `https://playotoron.com/blog/posts/${p.slug}`;
+  const url = `${BASE}/blog/posts/${p.slug}`;
   const og = p.ogImage || "/ogp.png";
   return {
     title,
     description: p.description,
-    openGraph: { title, description: p.description, url, images:[{url: og, width:1200, height:630}] },
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      siteName: "OTORON",
+      url,
+      title,
+      description: p.description,
+      images: [{ url: og, width: 1200, height: 630 }],
+      locale: "ja_JP",
+      publishedTime: p.date,
+      modifiedTime: p.updated ?? p.date
+    },
     twitter: { card: "summary_large_image" }
   };
 }
@@ -23,16 +36,34 @@ export async function generateMetadata({ params }) {
 export default async function PostPage({ params }) {
   const p = getPost(params.slug);
   if (!p) return <div>Not found</div>;
+
   const processed = await remark().use(html).process(p.content);
   const contentHtml = processed.toString();
 
+  const url = `${BASE}/blog/posts/${p.slug}`;
+  const ogAbs = p.ogImage?.startsWith("http")
+    ? p.ogImage
+    : `${BASE}${p.ogImage || "/ogp.png"}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: p.title,
+    description: p.description,
+    image: [ogAbs],
+    datePublished: p.date,
+    dateModified: p.updated ?? p.date,
+    author: { "@type": "Organization", name: "OTORON" },
+    publisher: { "@type": "Organization", name: "OTORON" },
+    mainEntityOfPage: url
+  };
+
   return (
     <article className="post">
-      <a href="/blog" className="meta">← 記事一覧に戻る</a>
-      <h1 className="hero" style={{fontSize:32}}>{p.title}</h1>
+      <a href="/blog" className="meta">← 記事一覧へ</a>
+      <h1>{p.title}</h1>
       <div className="meta">{new Date(p.date).toLocaleDateString("ja-JP")}</div>
-      {p.ogImage && <img src={p.ogImage} alt="" style={{marginTop:16}} />}
-      <div style={{marginTop:16}} dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </article>
   );
 }
