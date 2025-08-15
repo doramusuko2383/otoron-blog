@@ -1,3 +1,7 @@
+export const metadata = {
+  alternates: { canonical: "https://playotoron.com/blog" }
+};
+
 import Link from "next/link";
 import { getAllPosts } from "../lib/posts";
 
