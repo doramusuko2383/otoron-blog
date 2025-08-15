@@ -1,4 +1,4 @@
-import { getAllPosts, getPost } from "@/lib/posts";
+import { getAllPosts, getPost } from "../../../lib/posts";
 import { remark } from "remark";
 import html from "remark-html";
 
