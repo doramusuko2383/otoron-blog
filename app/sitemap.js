@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts } from "../lib/posts";
 
 export default async function sitemap() {
   const base = "https://playotoron.com/blog";
