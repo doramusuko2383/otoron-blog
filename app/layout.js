@@ -1,18 +1,34 @@
+import "./globals.css";
+
 export const metadata = {
-  title: "オトロンブログ",
-  description: "絶対音感トレーニング『オトロン』の公式ブログ"
+  title: "オトロン公式ブログ",
+  description: "絶対音感トレーニング『オトロン』の公式ブログ。",
+  openGraph: {
+    title: "オトロン公式ブログ",
+    description: "絶対音感トレーニング『オトロン』の公式ブログ。",
+    url: "https://playotoron.com/blog",
+    siteName: "OTORON",
+    images: [{ url: "/ogp.png", width: 1200, height: 630 }],
+    locale: "ja_JP",
+    type: "website"
+  },
+  twitter: { card: "summary_large_image" }
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ja">
-      <body style={{ fontFamily: "system-ui, sans-serif", maxWidth: 880, margin: "0 auto", padding: 16 }}>
-        <header style={{ padding: "16px 0" }}>
-          <a href="/" style={{ textDecoration: "none", fontWeight: 700 }}>オトロン</a>
-          <span style={{ marginLeft: 12, opacity: .7 }}> / ブログ</span>
+      <body>
+        <header className="container" style={{display:"flex",gap:12,alignItems:"center"}}>
+          <a href="/blog" style={{fontWeight:900,fontSize:18,color:"var(--brand)"}}>オトロン</a>
+          <span className="sub">/ ブログ</span>
+          <nav style={{marginLeft:"auto",display:"flex",gap:16}}>
+            <a href="/blog">記事一覧</a>
+            <a href="https://playotoron.com" target="_blank" rel="noreferrer">公式サイト</a>
+          </nav>
         </header>
-        {children}
-        <footer style={{ marginTop: 32, padding: "16px 0", fontSize: 12, opacity: .7 }}>
+        <main className="container">{children}</main>
+        <footer className="container" style={{opacity:.7,fontSize:12,marginTop:24}}>
           © {new Date().getFullYear()} OTORON
         </footer>
       </body>
