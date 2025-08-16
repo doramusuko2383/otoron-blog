@@ -1,4 +1,5 @@
 // app/page.tsx
+import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 
 export async function generateMetadata() {
@@ -28,21 +29,37 @@ export async function generateMetadata() {
   };
 }
 
-export default function Home() {
-  const all = getAllPosts();
+export default async function Home() {
+  const posts = getAllPosts();
 
   return (
     <>
-      <h1 className="page-title">オトロン公式ブログ</h1>
-      <p className="lede">
-        絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
-      </p>
+      {/* Hero */}
+      <section className="hero">
+        <div>
+          <h1>オトロン公式ブログ</h1>
+          <p>絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。</p>
+        </div>
 
+        {/* mascot (PC表示) */}
+        <Image
+          className="hero__mascot"
+          src="/otoron.webp"
+          alt="オトロン（公式キャラクター）"
+          width={140}
+          height={140}
+          priority
+        />
+      </section>
+
+      {/* Cards */}
       <section className="cards">
-        {all.map((p) => (
-          <a key={p.slug} href={`/blog/posts/${p.slug}`} className="card">
-            <h3 className="card_title">{p.title}</h3>
-            <div className="card_meta">{new Date(p.date).toLocaleDateString("ja-JP")}</div>
+        {posts.map((p) => (
+          <a key={p.slug} className="card" href={`/blog/posts/${p.slug}`}>
+            <h2 className="card_title">{p.title}</h2>
+            <p className="card_meta">
+              {new Date(p.date).toLocaleDateString("ja-JP")}
+            </p>
             <p className="card_desc">{p.description}</p>
           </a>
         ))}

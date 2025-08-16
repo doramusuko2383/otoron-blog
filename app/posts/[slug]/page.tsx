@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getAllPosts, getPost, getPrevNext } from "@/lib/posts";
 import { renderMarkdown } from "@/lib/markdown";
 
@@ -37,7 +38,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const p: any = getPost(params.slug);
   if (!p) return <div>Not found</div>;
 
-  const { prev, next }: any = getPrevNext(p.slug);
+    const { next }: any = getPrevNext(p.slug);
 
   const { html } = await renderMarkdown(p.content);
 
@@ -51,10 +52,34 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
       <div className="post-body" dangerouslySetInnerHTML={{ __html: html }} />
 
-      <nav className="pn">
-        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
-        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
-      </nav>
-    </article>
-  );
-}
+        <nav className="pn" aria-label="次の記事">
+          {next && (
+            <a
+              className="card"
+              href={`/blog/posts/${next.slug}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 64px",
+                alignItems: "center",
+                gap: 16,
+              }}
+            >
+              <div>
+                <div className="card_meta">次の記事</div>
+                <div className="card_title" style={{ margin: 0 }}>
+                  {next.title}
+                </div>
+              </div>
+              <Image
+                src="/otoron.webp"
+                alt=""
+                width={64}
+                height={64}
+                decoding="async"
+              />
+            </a>
+          )}
+        </nav>
+      </article>
+    );
+  }
