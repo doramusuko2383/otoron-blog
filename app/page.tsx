@@ -28,30 +28,26 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Home() {
-  const posts = getAllPosts();
+export default function Home() {
+  const all = getAllPosts();
 
   return (
-    <main className="wrap">
+    <>
       <h1 className="page-title">オトロン公式ブログ</h1>
       <p className="lede">
         絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
       </p>
 
-      <ul className="cards" aria-live="polite">
-        {posts.map((p) => (
-          <li key={p.slug} className="card">
-            <a href={`/blog/posts/${p.slug}`} className="card__link">
-              <div className="card__title">{p.title}</div>
-              <div className="card__date">
-                {new Date(p.date).toLocaleDateString("ja-JP")}
-              </div>
-              <p className="card__desc">{p.description}</p>
-            </a>
-          </li>
+      <section className="cards">
+        {all.map((p) => (
+          <a key={p.slug} href={`/blog/posts/${p.slug}`} className="card">
+            <h3 className="card_title">{p.title}</h3>
+            <div className="card_meta">{new Date(p.date).toLocaleDateString("ja-JP")}</div>
+            <p className="card_desc">{p.description}</p>
+          </a>
         ))}
-      </ul>
-    </main>
+      </section>
+    </>
   );
 }
 
