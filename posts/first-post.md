@@ -2,6 +2,7 @@
 title: "3歳からできる音感トレーニングの始め方"
 date: "2025-08-15"
 description: "幼児期に無理なく耳を育てるための具体ステップ。家庭とアプリの両輪で。"
+thumb: "/thumbs/first-post.jpg"
 ogImage: "/ogp.png"
 tags: ["絶対音感", "幼児", "トレーニング"]
 ---

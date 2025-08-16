@@ -1,70 +1,67 @@
-// app/page.tsx
 import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 
-export async function generateMetadata() {
-  const BASE = "https://playotoron.com";
-  const title = "オトロン公式ブログ";
-  const description =
-    "絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。";
+const MASCOT = "/otolon.webp";
+const FALLBACK_THUMB = "/otolon_face.webp";
 
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: `${BASE}/blog`,
-      types: { "application/rss+xml": `${BASE}/feed.xml` },
-    },
-    openGraph: {
-      type: "website",
-      siteName: "OTORON",
-      url: `${BASE}/blog`,
-      title,
-      description,
-      images: [{ url: "/og/blog", width: 1200, height: 630 }],
-      locale: "ja_JP",
-    },
-    twitter: { card: "summary_large_image" },
-    robots: { index: true, follow: true },
-  };
-}
+export const metadata = {
+  title: "オトロン公式ブログ",
+  description:
+    "絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。",
+  alternates: { canonical: "https://playotoron.com/blog" },
+  robots: { index: true, follow: true },
+};
 
-export default async function Home() {
+export default async function Page() {
   const posts = getAllPosts();
 
   return (
-    <>
-      {/* Hero */}
-      <section className="hero">
-        <div>
-          <h1>オトロン公式ブログ</h1>
-          <p>絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。</p>
+    <main className="wrap">
+      <div className="hero">
+        <div className="heroText">
+          <h1 className="pageTitle">オトロン公式ブログ</h1>
+          <p className="lede">
+            絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
+          </p>
         </div>
+        <div className="mascot">
+          <Image
+            src={MASCOT}
+            alt="オトロン"
+            priority
+            width={110}
+            height={140}
+            className="mascotImg"
+          />
+        </div>
+      </div>
 
-        {/* mascot (PC表示) */}
-        <Image
-          className="hero__mascot"
-          src="/otoron.webp"
-          alt="オトロン（公式キャラクター）"
-          width={140}
-          height={140}
-          priority
-        />
-      </section>
-
-      {/* Cards */}
       <section className="cards">
-        {posts.map((p) => (
-          <a key={p.slug} className="card" href={`/blog/posts/${p.slug}`}>
-            <h2 className="card_title">{p.title}</h2>
-            <p className="card_meta">
-              {new Date(p.date).toLocaleDateString("ja-JP")}
-            </p>
-            <p className="card_desc">{p.description}</p>
-          </a>
-        ))}
+        {posts.map((p) => {
+          const href = `/blog/posts/${p.slug}`;
+          const thumb = p.thumb || p.ogImage || FALLBACK_THUMB;
+          return (
+            <a key={p.slug} href={href} className="card">
+              <div className="thumb">
+                <Image
+                  src={thumb}
+                  alt={p.title}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  className="thumbImg"
+                />
+              </div>
+              <div className="cardBody">
+                <h2 className="cardTitle">{p.title}</h2>
+                <div className="cardMeta">
+                  {new Date(p.date).toLocaleDateString("ja-JP")}
+                </div>
+                <p className="cardDesc">{p.description}</p>
+              </div>
+            </a>
+          );
+        })}
       </section>
-    </>
+    </main>
   );
 }
-
