@@ -29,6 +29,7 @@ function collectToc() {
 
     if (!headings.length) {
       file.data.toc = null;
+      file.data.headings = [];
       return;
     }
 
@@ -45,6 +46,7 @@ function collectToc() {
     }
     html += "</ul></li></ul></nav>";
     file.data.toc = html;
+    file.data.headings = headings;
   };
 }
 
@@ -77,7 +79,9 @@ const schema = {
   ],
 };
 
-export async function renderMarkdown(md: string): Promise<{ html: string; toc: string | null }> {
+export async function renderMarkdown(
+  md: string
+): Promise<{ html: string; toc: string | null; headings: { depth: number; id: string; text: string }[] }> {
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -103,5 +107,6 @@ export async function renderMarkdown(md: string): Promise<{ html: string; toc: s
   return {
     html: String(file),
     toc: (file.data as any).toc ?? null,
+    headings: (file.data as any).headings ?? [],
   };
 }

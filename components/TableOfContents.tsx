@@ -13,10 +13,12 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
 
   useEffect(() => {
     if (items.length > 0) return;
-    const nodes = Array.from(document.querySelectorAll('article h2, article h3')) as HTMLElement[];
+    const root = document.querySelector('#post-body');
+    if (!root) return;
+    const nodes = Array.from(root.querySelectorAll('h2, h3')) as HTMLElement[];
     const hs: Heading[] = nodes.map((el) => {
       const text = (el.textContent || '').trim();
-      if (!el.id) el.id = slugify(text); // ← 見出しに実IDを付与（重要）
+      if (!el.id) el.id = slugify(text);
       return { id: el.id, text, depth: el.tagName === 'H3' ? 3 : 2 };
     });
     setItems(hs);
@@ -24,7 +26,9 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
 
   const [active, setActive] = useState('');
   useEffect(() => {
-    const targets = Array.from(document.querySelectorAll('article h2, article h3'));
+    const root = document.querySelector('#post-body');
+    if (!root) return;
+    const targets = Array.from(root.querySelectorAll('h2, h3'));
     if (!targets.length) return;
     const io = new IntersectionObserver(
       (ents) => {
@@ -38,6 +42,8 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
     targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
   }, []);
+
+  if (!items.length) return null;
 
   return (
     <nav aria-label="目次" className="toc">
