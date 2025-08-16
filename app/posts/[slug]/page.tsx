@@ -64,16 +64,23 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1fr)_240px]">
-        {/* 本文 */}
-        <article className="max-w-3xl">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+        {/* 本文（8カラム） */}
+        <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
             <time className="mt-2 block text-sm text-gray-500">
               {new Date(post.date).toLocaleDateString('ja-JP')}
             </time>
             <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">
-              <Image src={hero} alt={post.title} fill priority sizes="(max-width:768px) 100vw, 720px" className="object-cover" />
+              <Image
+                src={hero}
+                alt={post.title}
+                fill
+                priority
+                sizes="(max-width:768px) 100vw, 720px"
+                className="object-cover"
+              />
             </div>
           </header>
 
@@ -83,28 +90,48 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
           {/* 前後記事 …（既存のまま） */}
           <nav className="mt-10 flex justify-between text-sm">
-            <div>{prev && <a href={`/blog/posts/${prev.slug}`} className="underline">← {prev.title}</a>}</div>
-            <div>{next && <a href={`/blog/posts/${next.slug}`} className="underline">{next.title} →</a>}</div>
+            <div>
+              {prev && (
+                <a href={`/blog/posts/${prev.slug}`} className="underline">
+                  ← {prev.title}
+                </a>
+              )}
+            </div>
+            <div>
+              {next && (
+                <a href={`/blog/posts/${next.slug}`} className="underline">
+                  {next.title} →
+                </a>
+              )}
+            </div>
           </nav>
 
-          {/* 既に実装済みの関連記事セクション（このまま） */}
-          {related.length > 0 && (
-            <section style={{ marginTop: "48px" }}>
-              <h2 style={{ fontSize: "18px", margin: "0 0 16px" }}>関連記事</h2>
-              <div className="cards">
-                {related.map((r: any) => (
+          {/* 関連記事（← 重複があれば他を削除して1回だけに） */}
+          {related?.length > 0 && (
+            <section aria-labelledby="related" className="mt-12">
+              <h2 id="related" className="text-lg font-semibold">
+                関連記事
+              </h2>
+              <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {related.map((p: any) => (
                   <PostCard
-                    key={r.slug}
-                    slug={r.slug}
-                    title={r.title}
-                    description={r.description}
-                    date={r.date}
-                    thumb={r.thumb || r.ogImage}
+                    key={p.slug}
+                    slug={p.slug}
+                    title={p.title}
+                    description={p.description}
+                    date={p.date}
+                    thumb={p.thumb}
                   />
                 ))}
               </div>
             </section>
           )}
+
+          {/* モバイルの目次（折りたたみ） */}
+          <details className="md:hidden toc-mobile mt-10">
+            <summary className="toc-mobile-summary">目次</summary>
+            <TableOfContents headings={post.headings} />
+          </details>
 
           <script
             type="application/ld+json"
@@ -112,16 +139,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
           />
         </article>
 
-        {/* 目次（右サイド固定） */}
-        <aside className="hidden md:block">
-          {/* post.headings があれば渡す。無ければ未指定でOK（DOMから抽出） */}
-          <TableOfContents headings={post.headings} />
+        {/* 右サイド（4カラム） */}
+        <aside className="hidden md:block md:col-span-4">
+          <div className="sticky top-24">
+            <TableOfContents headings={post.headings} />
+          </div>
         </aside>
-
-        {/* モバイルの折りたたみ版（本文末尾に表示したい場合はここに） */}
-        <div className="md:hidden">
-          <TableOfContents headings={post.headings} />
-        </div>
       </div>
     </main>
   );
