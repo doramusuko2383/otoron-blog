@@ -268,3 +268,58 @@ main { padding-top: 24px; }
 
 /* 検索UI削除に伴う余白の微調整（必要なら） */
 .cards{ margin-top: 8px; }
+
+:root{
+  /* 公式の落ち着いた雰囲気に寄せたブルー。必要なら1色だけ差し替えでOK */
+  --brand:#2563eb;
+  --ink:#111827;         /* 本文 */
+  --muted:#6b7280;       /* 補助文 */
+  --bg:#fafafa;          /* 背景 */
+  --surface:#fff;        /* カード背景 */
+  --radius:14px;
+  --shadow:0 10px 25px rgba(17,24,39,.08);
+}
+
+html, body { background:var(--bg); color:var(--ink); }
+a { color:var(--brand); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* 幅を統一する器 */
+.container{ max-width:1040px; margin:0 auto; padding:24px 20px 80px; }
+
+/* ヘッダー／フッター */
+.mast{ position:sticky; top:0; background:rgba(255,255,255,.85); backdrop-filter:blur(8px);
+       border-bottom:1px solid #eee; z-index:50; }
+.mast .container{ display:flex; gap:20px; align-items:center; padding-block:16px; }
+.mast .brand{ font-weight:700; letter-spacing:.02em; }
+.mast nav{ margin-left:auto; display:flex; gap:18px; }
+
+footer.foot{ border-top:1px solid #eee; color:var(--muted); }
+
+/* ページタイトルと前文（lede） */
+h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8px; }
+.lede{ color:var(--muted); margin-bottom:24px; }
+
+/* 一覧カード */
+.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:28px; }
+.card{ display:block; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+       padding:22px; transition:transform .14s ease, box-shadow .14s ease; }
+.card:hover{ transform:translateY(-2px); box-shadow:0 12px 30px rgba(17,24,39,.12); }
+.card .card_title{ font-weight:700; margin:0 0 6px; }
+.card .card_meta{ color:var(--muted); font-size:14px; margin-bottom:6px; }
+.card .card_desc{ color:var(--muted); margin:0; }
+
+/* 記事ページ */
+.post{ max-width:760px; margin:0 auto; }
+.post h1{ font-size:clamp(25px,4.5vw,36px); line-height:1.3; margin:12px 0 8px; }
+.post .meta{ color:var(--muted); margin-bottom:20px; }
+.post-body{ font-size:17px; line-height:1.9; }
+.post-body p{ margin:1rem 0; }
+.post-body h2{ margin-top:36px; font-size:clamp(20px,3.5vw,24px); }
+.post-body ul{ padding-left:1.2rem; }
+.post-body li{ margin:.35rem 0; }
+
+/* 前後ナビ（横並びの小カード） */
+.pn{ display:flex; gap:12px; margin-top:48px; }
+.pn a{ flex:1; display:block; background:var(--surface); border-radius:var(--radius);
+       box-shadow:var(--shadow); padding:14px 16px; }

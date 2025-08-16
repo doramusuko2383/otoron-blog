@@ -39,68 +39,21 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   const { prev, next }: any = getPrevNext(p.slug);
 
-  const { html, toc } = await renderMarkdown(p.content);
-
-  const url = `${BASE}/blog/posts/${p.slug}`;
-  const ogAbs = p.ogImage?.startsWith("http")
-    ? p.ogImage
-    : `${BASE}${p.ogImage || `/og/${p.slug}`}`;
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: p.title,
-    description: p.description,
-    image: [ogAbs],
-    datePublished: p.date,
-    dateModified: p.updated ?? p.date,
-    author: { "@type": "Organization", name: "OTORON" },
-    publisher: { "@type": "Organization", name: "OTORON" },
-    mainEntityOfPage: url
-  };
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ブログ", item: "https://playotoron.com/blog" },
-      { "@type": "ListItem", position: 2, name: p.title, item: url }
-    ]
-  };
+  const { html } = await renderMarkdown(p.content);
 
   return (
     <article className="post">
-      <p className="backline">
-        <a href="/blog" className="backlink">← 記事一覧へ</a>
-      </p>
-
-      <h1 className="post__title">{p.title}</h1>
-      <div className="post__meta">
-        {new Date(p.date).toLocaleDateString("ja-JP")}・読了目安:{" "}
-        {Math.max(1, Math.round(p.content.replace(/\s+/g, "").length / 400))}分
+      <a href="/blog" className="meta">← 記事一覧へ</a>
+      <h1>{p.title}</h1>
+      <div className="meta">
+        {new Date(p.date).toLocaleDateString("ja-JP")} ・ 読了目安: {Math.max(1, Math.round(p.content.replace(/\s+/g, "").length / 400))}分
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
 
-      {/* 目次（PCは右、SPは上） */}
-      <div className="post-body-with-toc">
-        {toc ? (
-          <aside className="toc-aside" aria-label="目次" dangerouslySetInnerHTML={{ __html: toc }} />
-        ) : null}
-        <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
+      <div className="post-body" dangerouslySetInnerHTML={{ __html: html }} />
 
       <nav className="pn">
-        {prev && (
-          <a className="pn__link pn__prev" href={`/blog/posts/${prev.slug}`}>
-            <span className="pn__kicker">← 前の記事</span>
-            <span className="pn__title">{prev.title}</span>
-          </a>
-        )}
-        {next && (
-          <a className="pn__link pn__next" href={`/blog/posts/${next.slug}`}>
-            <span className="pn__kicker">次の記事 →</span>
-            <span className="pn__title">{next.title}</span>
-          </a>
-        )}
+        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
+        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
       </nav>
     </article>
   );

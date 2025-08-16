@@ -10,17 +10,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja">
       <body>
-        <header className="site-header">
-          <a className="brand" href="/">オトロン</a>
-          <nav className="topnav">
-            <a href="/blog">記事一覧</a>
-            <a href="https://playotoron.com">公式サイト</a>
-          </nav>
+        <header className="mast">
+          <div className="container">
+            <a className="brand" href="/">オトロン</a>
+            <nav>
+              <a href="/blog">記事一覧</a>
+              <a href="https://playotoron.com">公式サイト</a>
+            </nav>
+          </div>
         </header>
 
-        {children}
+        <main className="container">{children}</main>
 
-        <footer className="site-footer">© {new Date().getFullYear()} OTORON</footer>
+        <footer className="foot">
+          <div className="container">© {new Date().getFullYear()} OTORON</div>
+        </footer>
       </body>
     </html>
   );
