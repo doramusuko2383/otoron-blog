@@ -1,5 +1,6 @@
 // app/page.tsx
 import { getAllPosts } from "@/lib/posts";
+import type { BlogPost } from "@/types/posts";
 
 export async function generateMetadata() {
   const BASE = "https://playotoron.com";
@@ -32,7 +33,7 @@ export default async function Home({
   searchParams: SearchParams;
 }) {
   const q = (searchParams?.q ?? "").trim().toLowerCase();
-  const all = getAllPosts();
+  const all: BlogPost[] = getAllPosts();
   const posts = q
     ? all.filter((p) => {
         const hay = `${p.title ?? ""} ${p.description ?? ""} ${p.slug}`.toLowerCase();
