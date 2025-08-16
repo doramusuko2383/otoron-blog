@@ -84,7 +84,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </div>
           </header>
 
-          <div className="prose prose-blue max-w-none">
+          <div id="post-body" className="prose prose-blue max-w-none">
             <div dangerouslySetInnerHTML={{ __html: post.html }} />
           </div>
 
@@ -127,11 +127,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </section>
           )}
 
-          {/* ▼ モバイルは折りたたみ（ここは表示OKだったのでこのまま） */}
-          <details className="md:hidden toc-mobile mt-10">
-            <summary className="toc-mobile-summary">目次</summary>
-            <TableOfContents headings={post.headings} />
-          </details>
+          {/* モバイル TOC（本文に見出しが無い場合は非表示にしたい場合のみ） */}
+          {post.headings?.length ? (
+            <details className="md:hidden toc-mobile mt-10">
+              <summary className="toc-mobile-summary">目次</summary>
+              <TableOfContents headings={post.headings} />
+            </details>
+          ) : null}
 
           <script
             type="application/ld+json"
