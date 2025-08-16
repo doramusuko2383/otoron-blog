@@ -1,145 +1,107 @@
 import { unified } from "unified";
-import parse from "remark-parse";
-import gfm from "remark-gfm";
-import smartypants from "remark-smartypants";
-import remark2rehype from "remark-rehype";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkSmartypants from "remark-smartypants";
+import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import slug from "rehype-slug";
-import autolink from "rehype-autolink-headings";
-import externalLinks from "rehype-external-links";
-import rehypeToc from "rehype-toc";
-import sanitize from "rehype-sanitize";
-import type { Root } from "hast";
-import { defaultSchema } from "hast-util-sanitize";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
-// ---- 設定：sanitize allowlist（表・コード・画像など許可） ----
-const schema: any = structuredClone(defaultSchema);
+// 見出しから簡易TOCを作るプラグイン（h2/h3）
+function collectToc() {
+  return (tree: any, file: any) => {
+    const headings: { depth: number; id: string; text: string }[] = [];
+    const visit = (node: any) => {
+      if (node.type === "element" && /^h[2-3]$/.test(node.tagName)) {
+        const id = node.properties?.id || "";
+        const text = (node.children || [])
+          .filter((c: any) => c.type === "text")
+          .map((c: any) => c.value)
+          .join("");
+        const depth = Number(node.tagName.slice(1));
+        if (id && text) headings.push({ depth, id, text });
+      }
+      (node.children || []).forEach(visit);
+    };
+    visit(tree);
 
-// 追加タグ
-schema.tagNames = Array.from(
-  new Set([
-    ...(schema.tagNames ?? []),
-    "section",
-    "details",
-    "summary",
-    "table",
-    "thead",
-    "tbody",
-    "tr",
-    "th",
-    "td",
-    "pre",
-    "code",
-    "img",
-  ])
-);
+    if (!headings.length) {
+      file.data.toc = null;
+      return;
+    }
 
-// a要素の追加属性
-schema.attributes = {
-  ...(schema.attributes ?? {}),
-  a: [
-    ...(schema.attributes?.a ?? []),
-    "href",
-    "name",
-    "target",
-    "rel",
-    "aria-label",
-  ],
-  img: [
-    ...(schema.attributes?.img ?? []),
-    "src",
-    "alt",
-    "title",
-    "width",
-    "height",
-    "decoding",
-    "loading",
-  ],
-  code: [
-    ...(schema.attributes?.code ?? []),
-    // rehype-prism など導入時に className を許可
-    ["className", /^language-[\w-]+$/],
-  ],
-  th: [...(schema.attributes?.th ?? []), "align"],
-  td: [...(schema.attributes?.td ?? []), "align"],
-};
-
-// headingアンカーリンクの見た目（自動で小さなリンクアイコンを追加しない）
-const autolinkOptions = {
-  behavior: "append" as const,
-  content: () => ({
-    type: "text",
-    value: "",
-  }),
-};
-
-// TOC出力を受け取るための一時変数
-function captureToc() {
-  let tocHtml = "";
-  return {
-    plugin: () =>
-      function rehypeTocCapture(tree: Root) {
-        // rehype-toc 実行後、tree 内に .toc を含むノードが乗るので、
-        // 文字列化の前に抽出するのではなく、2パスに分ける。
-        // → 今回は rehype-toc を1回目のパイプラインで走らせ、文字列化結果から抽出する方式にする。
-      },
-    get html() {
-      return tocHtml;
-    },
-    set(html: string) {
-      tocHtml = html;
-    },
+    // h2 をトップ、h3 をサブとして UL を組む
+    let html = '<nav class="toc"><ul>';
+    for (let i = 0; i < headings.length; i++) {
+      const h = headings[i];
+      if (h.depth === 2) {
+        if (i !== 0) html += "</ul></li>";
+        html += `<li><a href="#${h.id}">${h.text}</a><ul>`;
+      } else {
+        html += `<li><a href="#${h.id}">${h.text}</a></li>`;
+      }
+    }
+    html += "</ul></li></ul></nav>";
+    file.data.toc = html;
   };
 }
 
-/**
- * Markdown文字列を安全にHTMLへ変換し、
- * 本文HTMLとTOC(目次)HTMLを返す
- */
-export async function renderMarkdown(md: string): Promise<{ html: string; toc: string }> {
-  // 1パス目：TOC付きでHTML化
-  const withToc = await unified()
-    .use(parse)
-    .use(gfm)
-    .use(smartypants)
-    .use(remark2rehype, { allowDangerousHtml: false })
-    .use(slug) // 見出しにid付与
-    .use(autolink, autolinkOptions)
-    .use(externalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] })
-    .use(rehypeToc, {
-      headings: ["h1", "h2", "h3"],
-      cssClasses: {
-        toc: "toc",
-        list: "toc-list",
-        listItem: "toc-item",
-        link: "toc-link",
+// rehype-sanitize の許可拡張（必要最低限）
+const schema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    a: [
+      ...(defaultSchema.attributes?.a || []),
+      ["target", ["_blank"]],
+      ["rel", ["noopener", "noreferrer"]],
+    ],
+    img: [
+      ...(defaultSchema.attributes?.img || []),
+      ["loading", ["lazy"]],
+      ["decoding", ["async"]],
+      ["referrerpolicy", ["no-referrer"]],
+    ],
+    code: [...(defaultSchema.attributes?.code || []), ["className", "string"]],
+  },
+  tagNames: [
+    ...(defaultSchema.tagNames || []),
+    "details",
+    "summary",
+    "kbd",
+    "mark",
+    "figure",
+    "figcaption",
+  ],
+};
+
+export async function renderMarkdown(md: string): Promise<{ html: string; toc: string | null }> {
+  const file = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkSmartypants)
+    .use(remarkRehype, { allowDangerousHtml: false })
+    .use(rehypeSlug)
+    .use(collectToc) // ← 先に見出しを収集（rehypeSlug 後）
+    .use(rehypeAutolinkHeadings, {
+      behavior: "append",
+      content: {
+        type: "text",
+        value: " #",
       },
     })
-    .use(sanitize, schema)
+    .use(rehypeExternalLinks, {
+      target: "_blank",
+      rel: ["noopener", "noreferrer"],
+    })
+    .use(rehypeSanitize, schema as any)
     .use(rehypeStringify)
     .process(md);
 
-  const withTocHtml = String(withToc);
-
-  // 2パス目：同じ内容をTOCなしで本文のみHTML化（TOCは別枠で出すため）
-  const withoutToc = await unified()
-    .use(parse)
-    .use(gfm)
-    .use(smartypants)
-    .use(remark2rehype, { allowDangerousHtml: false })
-    .use(slug)
-    .use(autolink, autolinkOptions)
-    .use(externalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] })
-    .use(sanitize, schema)
-    .use(rehypeStringify)
-    .process(md);
-
-  const bodyHtml = String(withoutToc);
-
-  // withTocHtml から .toc セクションだけを切り出す（簡易抽出）
-  // rehypeをもう一度使うのもアリだが、軽量に正規化された構造前提で抽出
-  const tocMatch = withTocHtml.match(/<nav class="toc"[\s\S]*?<\/nav>/);
-  const tocHtml = tocMatch ? tocMatch[0] : "";
-
-  return { html: bodyHtml, toc: tocHtml };
+  return {
+    html: String(file),
+    toc: (file.data as any).toc ?? null,
+  };
 }

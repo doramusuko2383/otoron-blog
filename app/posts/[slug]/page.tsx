@@ -8,7 +8,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const p = getPost(params.slug);
+  const p: any = getPost(params.slug);
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
   const url = `${BASE}/blog/posts/${p.slug}`;
@@ -40,10 +40,10 @@ function readingTime(text: string) {
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const p = getPost(params.slug);
+  const p: any = getPost(params.slug);
   if (!p) return <div>Not found</div>;
 
-  const { prev, next } = getPrevNext(p.slug);
+  const { prev, next }: any = getPrevNext(p.slug);
 
   const { html, toc } = await renderMarkdown(p.content);
 

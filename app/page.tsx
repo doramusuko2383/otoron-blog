@@ -37,7 +37,7 @@ export default async function Home({
   const q = (searchParams?.q ?? "").trim().toLowerCase();
 
   // 投稿一覧（draftは lib/posts 側で除外済み）
-  const all = getAllPosts();
+  const all: any[] = getAllPosts();
 
   const posts = q
     ? all.filter((p) => {
