@@ -12,23 +12,44 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
   const [items, setItems] = useState<Heading[]>(headings);
 
   useEffect(() => {
-    if (items.length > 0) return;
+    // 1) props に既に見出しがあるならそれを使う
+    if (headings.length > 0) {
+      setItems(headings);
+      return;
+    }
+    // 2) 本文 (#post-body) から h2/h3 を抽出
     const root = document.querySelector('#post-body');
     if (!root) return;
-    const nodes = Array.from(root.querySelectorAll('h2, h3')) as HTMLElement[];
-    const hs: Heading[] = nodes.map((el) => {
-      const text = (el.textContent || '').trim();
-      if (!el.id) el.id = slugify(text);
-      return { id: el.id, text, depth: el.tagName === 'H3' ? 3 : 2 };
-    });
-    setItems(hs);
-  }, [items.length]);
 
+    let hs: Heading[] = [];
+    const hNodes = Array.from(root.querySelectorAll('h2, h3')) as HTMLElement[];
+    if (hNodes.length) {
+      hs = hNodes.map((el) => {
+        const text = (el.textContent || '').trim();
+        if (!el.id) el.id = slugify(text);
+        return { id: el.id, text, depth: el.tagName === 'H3' ? 3 : 2 };
+      });
+    } else {
+      // 3) 見出しが無ければ、直下のリスト項目から擬似TOCを作成（最大5件）
+      const lis = Array.from(
+        root.querySelectorAll(':scope > ol > li, :scope > ul > li')
+      ) as HTMLElement[];
+      hs = lis.slice(0, 5).map((li, i) => {
+        const text = (li.textContent || '').trim();
+        const id = li.id || `sec-${i + 1}`;
+        li.id = id; // アンカーを付与
+        return { id, text, depth: 2 };
+      });
+    }
+    setItems(hs);
+  }, [headings]);
+
+  // 現在位置ハイライト（軽量）
   const [active, setActive] = useState('');
   useEffect(() => {
     const root = document.querySelector('#post-body');
     if (!root) return;
-    const targets = Array.from(root.querySelectorAll('h2, h3'));
+    const targets = Array.from(root.querySelectorAll('h2, h3, :scope > ol > li, :scope > ul > li'));
     if (!targets.length) return;
     const io = new IntersectionObserver(
       (ents) => {
@@ -43,6 +64,7 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
     return () => io.disconnect();
   }, []);
 
+  // 何も作れなければ描画しない（右サイドは CSS で自動非表示）
   if (!items.length) return null;
 
   return (

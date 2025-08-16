@@ -62,13 +62,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
     description: post.description,
   };
 
-  const hasTOC = Array.isArray(post.headings) && post.headings.length > 0;
+  const hasTOC = Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <div className={`grid grid-cols-1 gap-8 ${hasTOC ? 'md:grid-cols-12' : ''}`}>
+      <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
         {/* 本文（8カラム） */}
-        <article className={hasTOC ? 'md:col-span-8' : ''}>
+        <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
             <time className="mt-2 block text-sm text-gray-500">
@@ -144,13 +144,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </article>
 
         {/* ▼ デスクトップ用 */}
-        {hasTOC && (
-          <aside className="hidden md:block md:col-span-4">
-            <div className="sticky top-24">
-              <TableOfContents headings={post.headings} />
-            </div>
-          </aside>
-        )}
+        <aside className="hidden md:block md:col-span-4">
+          <div className="sticky top-24 toc-aside">
+            <TableOfContents headings={post.headings} />
+          </div>
+        </aside>
       </div>
     </main>
   );

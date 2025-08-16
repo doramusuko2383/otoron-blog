@@ -455,6 +455,12 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
   transform: translateY(0);
 }
 /* 目次 */
+/* 右サイド：中に .toc が無ければ非表示 */
+@supports (selector(:has(*))) {
+  .toc-aside:not(:has(.toc)) {
+    display: none;
+  }
+}
 .toc { width: 100%; font-size: 0.95rem; line-height: 1.75; color: #334155; }
 .toc ol { list-style: none; padding-left: 0; margin: 0; }
 .toc-li { margin: .2rem 0; }
