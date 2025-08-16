@@ -9,6 +9,8 @@ export async function GET(_: Request, { params }: { params: { slug: string } }) 
   const p = getPost(params.slug);
   const title = p?.title ?? "OTORON BLOG";
 
+  const brand = "#6c46ff";
+
   return new ImageResponse(
     (
       <div
@@ -19,15 +21,17 @@ export async function GET(_: Request, { params }: { params: { slug: string } }) 
           flexDirection: "column",
           justifyContent: "center",
           padding: "64px 72px",
-          background: "linear-gradient(135deg,#ffffff,#f7f5ff)",
+          "--brand": brand,
+          "--brand-100": "color-mix(in oklab, var(--brand), white 82%)",
+          background: "linear-gradient(135deg,#ffffff,var(--brand-100))",
           fontFamily: "system-ui, -apple-system, Segoe UI, Noto Sans JP, sans-serif",
         }}
       >
-        <div style={{ fontSize: 30, color: "#6c46ff", marginBottom: 16 }}>OTORON BLOG</div>
+        <div style={{ fontSize: 30, color: "var(--brand)", marginBottom: 16 }}>OTORON BLOG</div>
         <div style={{ fontSize: 64, fontWeight: 800, lineHeight: 1.15, whiteSpace: "pre-wrap" }}>
           {title}
         </div>
-        <div style={{ position: "absolute", bottom: 40, right: 72, fontSize: 28, opacity: .7 }}>
+        <div style={{ position: "absolute", bottom: 40, right: 72, fontSize: 28, opacity: .7, color: "var(--brand)" }}>
           playotoron.com
         </div>
       </div>
