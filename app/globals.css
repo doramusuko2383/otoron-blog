@@ -454,3 +454,19 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
   opacity: 1;
   transform: translateY(0);
 }
+/* --- TOC layout & style --- */
+.toc { width: 240px; font-size: 0.95rem; line-height: 1.75; color: #334155; }
+.toc ol { list-style: none; padding-left: 0; margin: 0; }
+.toc-li { margin: .2rem 0; }
+.toc-li--lvl3 { padding-left: 1rem; }
+.toc-link { display: inline-block; text-decoration: none; color: inherit; border-left: 3px solid transparent; padding-left: .5rem; }
+.toc-link:hover { text-decoration: underline; }
+.toc-link.is-active { border-left-color: #60a5fa; color: #1f2937; font-weight: 600; }
+
+/* モバイル折りたたみ */
+.toc-mobile { margin-top: 1rem; }
+.toc-mobile-summary { cursor: pointer; padding: .5rem .75rem; border: 1px solid #e5e7eb; border-radius: .5rem; background: #fff; }
+
+/* --- Heading jump offset (fixed header対策) --- */
+article h2, article h3 { scroll-margin-top: 96px; }
+
