@@ -406,3 +406,39 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
   line-height: 1.9;
   font-size: 17px;
 }
+
+/* ========== Layout */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 48px 20px 80px; }
+
+/* ========== Hero */
+.hero { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; margin-bottom: 24px; }
+.pageTitle { font-size: clamp(28px, 5vw, 44px); line-height: 1.2; letter-spacing: .02em; margin: 0; }
+.lede { color: var(--muted); margin: 8px 0 0; }
+.mascot { position: relative; width: 110px; height: 140px; }
+.mascotImg { filter: drop-shadow(0 8px 22px rgba(0,0,0,.12)); }
+
+/* ========== Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; margin-top: 22px; }
+.card { display: grid; grid-template-rows: 180px auto; border-radius: 16px; background: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,.06); text-decoration: none; color: inherit; overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 18px 38px rgba(0,0,0,.1); }
+.thumb { position: relative; width: 100%; height: 100%; background: #f6f7fb; }
+.thumbImg { object-fit: cover; }
+.cardBody { padding: 18px 18px 20px; }
+.cardTitle { font-size: 18px; line-height: 1.45; margin: 0 0 6px; color: var(--ink); }
+.cardMeta { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.cardDesc { font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+/* ========== Post */
+.postHeader { margin-bottom: 18px; }
+.heroMedia { position: relative; width: 100%; height: clamp(180px, 36vw, 360px); border-radius: 14px; overflow: hidden; background: #f6f7fb; }
+.heroMediaImg { object-fit: cover; }
+.postTitle { margin: 14px 0 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.25; }
+.meta { color: var(--muted); font-size: 14px; }
+
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; align-items: start; }
+  .mascot { width: 84px; height: 108px; margin-left: auto; }
+  .cards { gap: 20px; }
+}
