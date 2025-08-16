@@ -14,11 +14,11 @@ function siteBase() {
 
 export async function GET() {
   const SITE = siteBase();
-  const posts = (await getAllPostsMeta()).filter(p => !p.draft);
+  const posts = (await getAllPostsMeta() as any[]).filter((p: any) => !p.draft);
 
   const urls = [
     { loc: `${SITE}/blog`, lastmod: new Date().toISOString() },
-    ...posts.map(p => ({
+    ...posts.map((p: any) => ({
       loc: `${SITE}/blog/posts/${p.slug}`,
       lastmod: new Date(p.date).toISOString(),
     })),

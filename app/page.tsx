@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 
-const MASCOT = "/otolon.webp";
+const MASCOT = "/otoron.webp";
 const FALLBACK_THUMB = "/otolon_face.webp";
 
 export const metadata = {

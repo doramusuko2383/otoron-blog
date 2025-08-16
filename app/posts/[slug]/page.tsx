@@ -13,12 +13,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const p: any = getPost(params.slug);
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
-  const url = `${BASE}/blog/posts/${p.slug}`;
+  const canonical = `/blog/posts/${p.slug}`;
+  const url = `${BASE}${canonical}`;
   const hero = p.thumb || p.ogImage || `/og/${p.slug}`;
   return {
     title,
     description: p.description,
-    alternates: { canonical: url },
+    alternates: { canonical },
     openGraph: {
       type: "article",
       siteName: "OTORON",
@@ -46,6 +47,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const { prev, next }: any = getPrevNext(p.slug);
   const { html } = await renderMarkdown(p.content);
   const hero = p.thumb || p.ogImage || FALLBACK_THUMB;
+  const canonical = `/blog/posts/${p.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -53,7 +55,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
     datePublished: p.date,
     dateModified: p.updated ?? p.date,
     image: hero,
-    url: `${BASE}/blog/posts/${p.slug}`,
+    url: `${BASE}${canonical}`,
     description: p.description,
   };
 
