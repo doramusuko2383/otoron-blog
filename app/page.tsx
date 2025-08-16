@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { getAllPosts } from "@/lib/posts";
+import PostCard from "@/components/PostCard";
+import FadeInOnView from "@/components/FadeInOnView";
+import { getAllPostsMeta } from "@/lib/posts";
 
 const MASCOT = "/otoron.webp";
-const FALLBACK_THUMB = "/otolon_face.webp";
 
 export const metadata = {
   title: "オトロン公式ブログ",
@@ -13,7 +14,9 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const posts = getAllPosts();
+  const posts = getAllPostsMeta()
+    .filter((p: any) => !p.draft)
+    .sort((a: any, b: any) => (a.date < b.date ? 1 : -1));
 
   return (
     <main className="wrap">
@@ -37,30 +40,17 @@ export default async function Page() {
       </div>
 
       <section className="cards">
-        {posts.map((p) => {
-          const href = `/blog/posts/${p.slug}`;
-          const thumb = p.thumb || p.ogImage || FALLBACK_THUMB;
-          return (
-            <a key={p.slug} href={href} className="card">
-              <div className="thumb">
-                <Image
-                  src={thumb}
-                  alt={p.title}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  className="thumbImg"
-                />
-              </div>
-              <div className="cardBody">
-                <h2 className="cardTitle">{p.title}</h2>
-                <div className="cardMeta">
-                  {new Date(p.date).toLocaleDateString("ja-JP")}
-                </div>
-                <p className="cardDesc">{p.description}</p>
-              </div>
-            </a>
-          );
-        })}
+        {posts.map((p: any) => (
+          <FadeInOnView key={p.slug}>
+            <PostCard
+              slug={p.slug}
+              title={p.title}
+              description={p.description}
+              date={p.date}
+              thumb={p.thumb || p.ogImage}
+            />
+          </FadeInOnView>
+        ))}
       </section>
     </main>
   );
