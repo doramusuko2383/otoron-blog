@@ -62,11 +62,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
     description: post.description,
   };
 
+  const hasTOC = Array.isArray(post.headings) && post.headings.length > 0;
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+      <div className={`grid grid-cols-1 gap-8 ${hasTOC ? 'md:grid-cols-12' : ''}`}>
         {/* 本文（8カラム） */}
-        <article className="md:col-span-8">
+        <article className={hasTOC ? 'md:col-span-8' : ''}>
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
             <time className="mt-2 block text-sm text-gray-500">
@@ -127,13 +129,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </section>
           )}
 
-          {/* モバイル TOC（本文に見出しが無い場合は非表示にしたい場合のみ） */}
-          {post.headings?.length ? (
+          {/* モバイル TOC（本文に見出しが無い場合は非表示） */}
+          {hasTOC && (
             <details className="md:hidden toc-mobile mt-10">
               <summary className="toc-mobile-summary">目次</summary>
               <TableOfContents headings={post.headings} />
             </details>
-          ) : null}
+          )}
 
           <script
             type="application/ld+json"
@@ -141,12 +143,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
           />
         </article>
 
-        {/* ▼ デスクトップ用（ここが空になっていた） */}
-        <aside className="hidden md:block md:col-span-4">
-          <div className="sticky top-24">
-            <TableOfContents headings={post.headings} />
-          </div>
-        </aside>
+        {/* ▼ デスクトップ用 */}
+        {hasTOC && (
+          <aside className="hidden md:block md:col-span-4">
+            <div className="sticky top-24">
+              <TableOfContents headings={post.headings} />
+            </div>
+          </aside>
+        )}
       </div>
     </main>
   );
