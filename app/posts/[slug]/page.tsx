@@ -127,7 +127,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </section>
           )}
 
-          {/* モバイルの目次（折りたたみ） */}
+          {/* ▼ モバイルは折りたたみ（ここは表示OKだったのでこのまま） */}
           <details className="md:hidden toc-mobile mt-10">
             <summary className="toc-mobile-summary">目次</summary>
             <TableOfContents headings={post.headings} />
@@ -139,7 +139,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           />
         </article>
 
-        {/* 右サイド（4カラム） */}
+        {/* ▼ デスクトップ用（ここが空になっていた） */}
         <aside className="hidden md:block md:col-span-4">
           <div className="sticky top-24">
             <TableOfContents headings={post.headings} />
