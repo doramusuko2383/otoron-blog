@@ -10,7 +10,10 @@ export async function generateMetadata() {
   return {
     title,
     description,
-    alternates: { canonical: `${BASE}/blog` },
+    alternates: {
+      canonical: `${BASE}/blog`,
+      types: { "application/rss+xml": `${BASE}/feed.xml` },
+    },
     openGraph: {
       type: "website",
       siteName: "OTORON",
@@ -25,45 +28,16 @@ export async function generateMetadata() {
   };
 }
 
-type SearchParams = { q?: string };
-
-export default async function Home({ searchParams }: { searchParams: SearchParams }) {
-  const q = (searchParams?.q ?? "").trim().toLowerCase();
-  const all = getAllPosts();
-
-  // ※検索は「タイトル＋説明＋スラッグ」のみ（軽量・高速）
-  const posts = q
-    ? all.filter((p) => {
-        const hay = `${p.title ?? ""} ${p.description ?? ""} ${p.slug}`.toLowerCase();
-        return hay.includes(q);
-      })
-    : all;
+export default async function Home() {
+  const posts = getAllPosts();
 
   return (
     <main className="wrap">
-      {/* ← パンくずは削除。ヘッダは大きく1つだけ */}
       <h1 className="page-title">オトロン公式ブログ</h1>
       <p className="lede">
         絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
       </p>
 
-      {/* 検索（GETクエリ） */}
-      <form action="/blog" method="get" className="search" role="search">
-        <label htmlFor="q" className="visually-hidden">ブログ内検索</label>
-        <input
-          id="q"
-          name="q"
-          type="search"
-          inputMode="search"
-          placeholder="キーワードで検索（タイトル・説明）"
-          defaultValue={q}
-          className="search__input"
-          aria-label="ブログ内検索"
-        />
-        <button type="submit" className="btn btn--brand">検索</button>
-      </form>
-
-      {/* カード一覧 */}
       <ul className="cards" aria-live="polite">
         {posts.map((p) => (
           <li key={p.slug} className="card">

@@ -1,6 +1,7 @@
 export default function robots() {
+  const BASE = "https://playotoron.com";
   return {
     rules: [{ userAgent: "*", allow: "/" }],
-    sitemap: "https://playotoron.com/blog/sitemap.xml"
+    sitemap: `${BASE}/sitemap.xml`,
   };
 }
