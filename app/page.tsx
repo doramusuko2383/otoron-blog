@@ -1,13 +1,11 @@
 // app/page.tsx
 import { getAllPosts } from "@/lib/posts";
 
-/** メタデータ（canonical は /blog 固定） */
 export async function generateMetadata() {
   const BASE = "https://playotoron.com";
   const title = "オトロン公式ブログ";
   const description =
     "絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。";
-
   return {
     title,
     description,
@@ -28,17 +26,13 @@ export async function generateMetadata() {
 
 type SearchParams = { q?: string };
 
-/** 一覧ページ（/）。検索はクエリパラメータ ?q= でサーバー側フィルタ */
 export default async function Home({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
   const q = (searchParams?.q ?? "").trim().toLowerCase();
-
-  // 投稿一覧（draftは lib/posts 側で除外済み）
-  const all: any[] = getAllPosts();
-
+  const all = getAllPosts();
   const posts = q
     ? all.filter((p) => {
         const hay = `${p.title ?? ""} ${p.description ?? ""} ${p.slug}`.toLowerCase();
@@ -47,58 +41,50 @@ export default async function Home({
     : all;
 
   return (
-    <main className="container mx-auto px-4 py-10">
-      {/* パンくず（簡易） */}
-      <nav className="text-sm mb-6 text-violet-700">
-        <a href="/" className="font-semibold">
-          オトロン
-        </a>{" "}
-        / ブログ
+    <main className="wrap">
+      <nav className="breadcrumb">
+        <a href="/" className="brand">オトロン</a> <span>/ ブログ</span>
       </nav>
 
-      <h1 className="text-5xl font-extrabold tracking-tight mb-3">
-        オトロン公式ブログ
-      </h1>
-      <p className="text-gray-600 mb-6">
+      <h1 className="page-title">オトロン公式ブログ</h1>
+      <p className="lede">
         絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
       </p>
 
-      {/* 検索フォーム（GETで/?q=） */}
-      <form action="/" method="get" className="mb-6">
+      {/* 検索（GET /?q=） */}
+      <form action="/" method="get" className="search">
+        <label htmlFor="q" className="visually-hidden">検索</label>
         <input
+          id="q"
           name="q"
           defaultValue={q}
-          placeholder="検索"
-          className="border rounded px-3 py-2 w-full max-w-md"
-          aria-label="記事検索"
+          placeholder="キーワードで検索"
+          inputMode="search"
         />
+        <button type="submit" className="btn">検索</button>
       </form>
 
       {/* 一覧 */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <ul className="cards" role="list">
         {posts.map((p) => (
-          <a
-            key={p.slug}
-            href={`/blog/posts/${p.slug}`} // /blog → rewrites で /posts へ
-            className="block rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow transition"
-          >
-            <h2 className="text-violet-700 text-xl font-semibold leading-snug">
-              {p.title}
-            </h2>
-            <div className="text-sm text-gray-500 mt-1">
-              {new Date(p.date).toLocaleDateString("ja-JP")}
-            </div>
-            <p className="text-gray-700 mt-2">{p.description}</p>
-          </a>
+          <li key={p.slug} className="cards__item">
+            <a href={`/blog/posts/${p.slug}`} className="card">
+              <h2 className="card__title">{p.title}</h2>
+              <time className="card__date" dateTime={p.date}>
+                {new Date(p.date).toLocaleDateString("ja-JP")}
+              </time>
+              <p className="card__desc">{p.description}</p>
+            </a>
+          </li>
         ))}
-      </section>
+      </ul>
 
-      {/* ヒットなし */}
       {posts.length === 0 && (
-        <p className="text-gray-600 mt-8">該当する記事が見つかりませんでした。</p>
+        <p className="muted">該当する記事が見つかりませんでした。</p>
       )}
 
-      <footer className="text-xs text-gray-500 mt-12">© 2025 OTORON</footer>
+      <footer className="foot">© 2025 OTORON</footer>
     </main>
   );
 }
+
