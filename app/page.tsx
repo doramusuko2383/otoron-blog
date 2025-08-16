@@ -1,6 +1,7 @@
 // app/page.tsx
 import { getAllPosts } from "@/lib/posts";
 import type { BlogPost } from "@/types/posts";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export async function generateMetadata() {
   const BASE = "https://playotoron.com";
@@ -32,20 +33,36 @@ export default async function Home({
 }: {
   searchParams: SearchParams;
 }) {
-  const q = (searchParams?.q ?? "").trim().toLowerCase();
   const all: BlogPost[] = getAllPosts();
+
+  // Markdownをざっくり素のテキストに
+  const mdToText = (md: string) =>
+    md
+      // コードブロック・インラインコードを間引く
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/`[^`]+`/g, " ")
+      // 画像/リンク表記
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+      .replace(/\[[^\]]*\]\([^)]*\)/g, " ")
+      // 見出し・強調などの記号
+      .replace(/[#>*_~\-+]+/g, " ")
+      // 余分な空白
+      .replace(/\s{2,}/g, " ")
+      // 重くならないように上限をかける
+      .slice(0, 3000);
+
+  const q = (searchParams?.q ?? "").trim().toLowerCase();
+  const allText = (p: BlogPost) =>
+    `${p.title ?? ""} ${p.description ?? ""} ${p.slug} ${mdToText(p.content)}`
+      .toLowerCase();
+
   const posts = q
-    ? all.filter((p) => {
-        const hay = `${p.title ?? ""} ${p.description ?? ""} ${p.slug}`.toLowerCase();
-        return hay.includes(q);
-      })
+    ? all.filter((p) => allText(p).includes(q))
     : all;
 
   return (
     <main className="wrap">
-      <nav className="breadcrumb">
-        <a href="/" className="brand">オトロン</a> <span>/ ブログ</span>
-      </nav>
+      <Breadcrumb items={[{ label: "オトロン", href: "/" }, { label: "ブログ" }]} />
 
       <h1 className="page-title">オトロン公式ブログ</h1>
       <p className="lede">
@@ -58,11 +75,12 @@ export default async function Home({
         <input
           id="q"
           name="q"
+          type="search"
           defaultValue={q}
           placeholder="キーワードで検索"
           inputMode="search"
         />
-        <button type="submit" className="btn">検索</button>
+        <button type="submit" className="btn-search">検索</button>
       </form>
 
       {/* 一覧 */}
@@ -70,11 +88,11 @@ export default async function Home({
         {posts.map((p) => (
           <li key={p.slug} className="cards__item">
             <a href={`/blog/posts/${p.slug}`} className="card">
-              <h2 className="card__title">{p.title}</h2>
+              <h2 className="card_title">{p.title}</h2>
               <time className="card__date" dateTime={p.date}>
                 {new Date(p.date).toLocaleDateString("ja-JP")}
               </time>
-              <p className="card__desc">{p.description}</p>
+              <p className="card_desc">{p.description}</p>
             </a>
           </li>
         ))}
