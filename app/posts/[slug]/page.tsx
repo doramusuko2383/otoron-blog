@@ -1,6 +1,12 @@
 import Image from "next/image";
-import { getAllPosts, getPost, getPrevNext } from "@/lib/posts";
-import { renderMarkdown } from "@/lib/markdown";
+import { notFound } from "next/navigation";
+import {
+  getAllPosts,
+  getPostBySlug,
+  getAdjacentPosts,
+  getRelatedPosts,
+} from "@/lib/posts";
+import PostCard from "@/components/PostCard";
 
 const BASE = "https://playotoron.com";
 const FALLBACK_THUMB = "/otolon_face.webp";
@@ -10,7 +16,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const p: any = getPost(params.slug);
+  const p: any = await getPostBySlug(params.slug);
   if (!p) return {};
   const title = `${p.title} | オトロン公式ブログ`;
   const canonical = `/blog/posts/${p.slug}`;
@@ -41,11 +47,11 @@ function readingTime(content: string) {
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const p: any = getPost(params.slug);
-  if (!p) return <div>Not found</div>;
+  const p: any = await getPostBySlug(params.slug);
+  if (!p || p.draft) return notFound();
 
-  const { prev, next }: any = getPrevNext(p.slug);
-  const { html } = await renderMarkdown(p.content);
+  const { prev, next }: any = await getAdjacentPosts(p.slug);
+  const related = await getRelatedPosts(p.slug, 2);
   const hero = p.thumb || p.ogImage || FALLBACK_THUMB;
   const canonical = `/blog/posts/${p.slug}`;
   const jsonLd = {
@@ -78,12 +84,30 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </div>
       </header>
 
-      <div className="post-body" dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="post-body" dangerouslySetInnerHTML={{ __html: p.html }} />
 
       <nav className="pn">
         {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
         {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
       </nav>
+
+      {related.length > 0 && (
+        <section style={{ marginTop: "48px" }}>
+          <h2 style={{ fontSize: "18px", margin: "0 0 16px" }}>関連記事</h2>
+          <div className="cards">
+            {related.map((r: any) => (
+              <PostCard
+                key={r.slug}
+                slug={r.slug}
+                title={r.title}
+                description={r.description}
+                date={r.date}
+                thumb={r.thumb || r.ogImage}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <script
         type="application/ld+json"

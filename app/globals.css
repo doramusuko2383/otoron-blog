@@ -442,3 +442,15 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
   .mascot { width: 84px; aspect-ratio: 1 / 1; margin-left: auto; }
   .cards { gap: 20px; }
 }
+
+/* --- fade-up once --- */
+.io-fade {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease;
+  will-change: opacity, transform;
+}
+.io-fade.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
