@@ -118,3 +118,64 @@ html {
 .toc li { margin: 4px 0; }
 .toc a { text-decoration: none; }
 .toc a:hover { text-decoration: underline; }
+
+/* === Blog UI refresh === */
+:root {
+  --brand: #7c3aed;             /* violet 600 */
+  --brand-ink: #5b21b6;         /* violet 700 */
+  --ink: #0f172a;               /* slate 900 */
+  --muted: #64748b;             /* slate 500 */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --border: #e5e7eb;            /* gray 200 */
+  --ring: #c4b5fd;              /* violet 300 */
+  --shadow: 0 8px 24px rgba(15, 23, 42, .08);
+}
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 56px 20px 80px; color: var(--ink); }
+
+.breadcrumb { font-size: 14px; margin-bottom: 14px; }
+.breadcrumb .brand { color: var(--brand); font-weight: 700; text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+.page-title { font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; font-weight: 800; letter-spacing: -.02em; margin: 8px 0 8px; }
+.lede { color: var(--muted); margin-bottom: 18px; }
+
+/* Search */
+.search { display: flex; gap: 8px; align-items: center; margin: 18px 0 28px; }
+.search input {
+  flex: 1 1 auto; min-width: 0; font-size: 16px;
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: #fff;
+}
+.search .btn {
+  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--brand);
+  background: var(--brand); color: #fff; font-weight: 700; cursor: pointer;
+}
+.search .btn:hover { background: var(--brand-ink); border-color: var(--brand-ink); }
+.search input:focus-visible, .search .btn:focus-visible {
+  outline: none; box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 8px; }
+.cards__item { list-style: none; }
+.card {
+  display: block; padding: 18px 18px 20px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+  text-decoration: none; color: inherit; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(15, 23, 42, .10); border-color: #d4d4d8; }
+.card__title { color: var(--brand); font-weight: 800; font-size: 20px; line-height: 1.35; margin: 0 0 6px; }
+.card__date { display: block; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.card__desc { color: #334155; margin: 0; }
+
+/* Helpers */
+.muted { color: var(--muted); margin-top: 12px; }
+.foot { margin-top: 40px; font-size: 12px; color: var(--muted); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* TOC（記事ページ） */
+.toc-aside { position: sticky; top: 96px; max-height: calc(100vh - 120px); overflow: auto; }
+.toc-aside nav.toc { font-size: 14px; }
+.toc-aside a { color: var(--brand); text-decoration: none; }
+.toc-aside a:hover { text-decoration: underline; }
