@@ -1,7 +1,6 @@
 // app/page.tsx
 import { getAllPosts } from "@/lib/posts";
 import type { BlogPost } from "@/types/posts";
-import Breadcrumb from "@/components/Breadcrumb";
 
 export async function generateMetadata() {
   const BASE = "https://playotoron.com";
@@ -60,9 +59,25 @@ export default async function Home({
     ? all.filter((p) => allText(p).includes(q))
     : all;
 
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "オトロン公式ブログ",
+    description:
+      "絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: posts.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://playotoron.com"}/blog/posts/${p.slug}`,
+      })),
+    },
+  };
+
   return (
     <main className="wrap">
-      <Breadcrumb items={[{ label: "オトロン", href: "/" }, { label: "ブログ" }]} />
+      {/* 一覧のパンくずは表示しない（記事ページのみ） */}
 
       <h1 className="page-title">オトロン公式ブログ</h1>
       <p className="lede">
@@ -80,7 +95,7 @@ export default async function Home({
           placeholder="キーワードで検索"
           inputMode="search"
         />
-        <button type="submit" className="btn-search">検索</button>
+        {/* Enterで送信できるのでボタンは省略可 */}
       </form>
 
       {/* 一覧 */}
@@ -101,6 +116,11 @@ export default async function Home({
       {posts.length === 0 && (
         <p className="muted">該当する記事が見つかりませんでした。</p>
       )}
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd) }}
+      />
 
       <footer className="foot">© 2025 OTORON</footer>
     </main>

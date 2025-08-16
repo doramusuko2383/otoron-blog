@@ -141,8 +141,9 @@ html {
 .breadcrumb .brand:hover { text-decoration: underline; }
 .breadcrumb .current { color: #6b7280; }
 
-.page-title { font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; font-weight: 800; letter-spacing: -.02em; margin: 8px 0 8px; }
-.lede { color: var(--muted); margin-bottom: 18px; }
+.page-title { font-size: clamp(28px, 2.8vw + 10px, 44px); line-height: 1.2; letter-spacing: .01em; margin: 8px 0 10px; }
+.lede { color:#61656d; margin-bottom: 22px; }
+main { padding-top: 24px; }
 
 /* Search */
 .search { display: flex; gap: 8px; align-items: center; margin: 18px 0 28px; }
