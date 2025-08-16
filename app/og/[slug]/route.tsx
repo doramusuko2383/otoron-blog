@@ -1,15 +1,16 @@
 import { ImageResponse } from "next/og";
-import { getPost } from "@/lib/posts";
 
-export const runtime = "nodejs";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+// ImageResponse は Edge で動かす
+export const runtime = "edge";
 
-export async function GET(_: Request, { params }: { params: { slug: string } }) {
-  const p = getPost(params.slug);
-  const title = p?.title ?? "OTORON BLOG";
+type Ctx = { params: { slug: string } };
 
-  const brand = "#6c46ff";
+export async function GET(_req: Request, { params }: Ctx) {
+  // fsを使わずに slug から見出しを作る（最低限の表示）
+  const title =
+    decodeURIComponent(params.slug ?? "")
+      .replace(/-/g, " ")
+      .trim() || "OTORON 公式ブログ";
 
   return new ImageResponse(
     (
@@ -18,24 +19,20 @@ export async function GET(_: Request, { params }: { params: { slug: string } }) 
           width: "1200px",
           height: "630px",
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
-          padding: "64px 72px",
-          "--brand": brand,
-          "--brand-100": "color-mix(in oklab, var(--brand), white 82%)",
-          background: "linear-gradient(135deg,#ffffff,var(--brand-100))",
-          fontFamily: "system-ui, -apple-system, Segoe UI, Noto Sans JP, sans-serif",
+          background: "#fff",
+          color: "#111",
+          fontSize: 64,
+          fontWeight: 700,
+          padding: 80,
+          letterSpacing: "-0.02em",
         }}
       >
-        <div style={{ fontSize: 30, color: "var(--brand)", marginBottom: 16 }}>OTORON BLOG</div>
-        <div style={{ fontSize: 64, fontWeight: 800, lineHeight: 1.15, whiteSpace: "pre-wrap" }}>
-          {title}
-        </div>
-        <div style={{ position: "absolute", bottom: 40, right: 72, fontSize: 28, opacity: .7, color: "var(--brand)" }}>
-          playotoron.com
-        </div>
+        {title} — OTORON
       </div>
     ),
-    size
+    { width: 1200, height: 630 } // ← ここでサイズ指定（exportしない）
   );
 }
+
