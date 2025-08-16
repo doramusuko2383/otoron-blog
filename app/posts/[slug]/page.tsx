@@ -1,5 +1,6 @@
 import { getAllPosts, getPost, getPrevNext } from "@/lib/posts";
 import { renderMarkdown } from "@/lib/markdown";
+import Breadcrumb from "@/components/Breadcrumb";
 
 const BASE = "https://playotoron.com"; // 1か所に集約
 
@@ -73,8 +74,16 @@ export default async function PostPage({ params }: { params: { slug: string } })
   };
 
   return (
-    <article className="post">
-      <a href="/blog" className="meta">← 記事一覧へ</a>
+    <>
+      <Breadcrumb
+        items={[
+          { label: "オトロン", href: "/" },
+          { label: "ブログ", href: "/blog" },
+          { label: p.title }
+        ]}
+      />
+      <article className="post">
+        <a href="/blog" className="meta">← 記事一覧へ</a>
       <h1>{p.title}</h1>
       <div className="meta">
         {new Date(p.date).toLocaleDateString("ja-JP")}
@@ -104,10 +113,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
 
-      <nav className="pn">
-        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
-        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
-      </nav>
-    </article>
+        <nav className="pn">
+          {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
+          {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
+        </nav>
+      </article>
+    </>
   );
 }

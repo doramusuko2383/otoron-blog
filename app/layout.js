@@ -33,7 +33,6 @@ export default function RootLayout({ children }) {
       <body>
         <header className="container" style={{display:"flex",gap:12,alignItems:"center"}}>
           <a href="/blog" style={{fontWeight:900,fontSize:18,color:"var(--brand)"}}>オトロン</a>
-          <span className="sub">/ ブログ</span>
           <nav style={{marginLeft:"auto",display:"flex",gap:16}}>
             <a href="/blog">記事一覧</a>
             <a href="https://playotoron.com" target="_blank" rel="noreferrer">公式サイト</a>
