@@ -28,10 +28,10 @@ export default async function Page() {
           <Image
             src={MASCOT}
             alt="オトロン"
-            priority
-            width={110}
-            height={140}
+            fill
+            sizes="80px"
             className="mascotImg"
+            priority={false}
           />
         </div>
       </div>

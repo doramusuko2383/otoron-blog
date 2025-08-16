@@ -414,8 +414,8 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
 .hero { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; margin-bottom: 24px; }
 .pageTitle { font-size: clamp(28px, 5vw, 44px); line-height: 1.2; letter-spacing: .02em; margin: 0; }
 .lede { color: var(--muted); margin: 8px 0 0; }
-.mascot { position: relative; width: 110px; height: 140px; }
-.mascotImg { filter: drop-shadow(0 8px 22px rgba(0,0,0,.12)); }
+.mascot { position: relative; width: 110px; aspect-ratio: 1 / 1; }
+.mascotImg { object-fit: contain; filter: drop-shadow(0 8px 22px rgba(0,0,0,.12)); }
 
 /* ========== Cards */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; margin-top: 22px; }
@@ -439,6 +439,6 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
 
 @media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; align-items: start; }
-  .mascot { width: 84px; height: 108px; margin-left: auto; }
+  .mascot { width: 84px; aspect-ratio: 1 / 1; margin-left: auto; }
   .cards { gap: 20px; }
 }
