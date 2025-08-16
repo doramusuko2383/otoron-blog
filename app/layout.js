@@ -1,6 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
+  metadataBase: new URL("https://otoron-blog.vercel.app"),
   title: "オトロン公式ブログ",
   description: "絶対音感トレーニング『オトロン』の公式ブログ。",
   openGraph: {
