@@ -51,8 +51,6 @@ export default async function Home() {
           </li>
         ))}
       </ul>
-
-      <footer className="copyright">© 2025 OTORON</footer>
     </main>
   );
 }

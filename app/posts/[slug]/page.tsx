@@ -89,8 +89,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
       </div>
 
       <nav className="pn">
-        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
-        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
+        {prev && (
+          <a className="pn__link pn__prev" href={`/blog/posts/${prev.slug}`}>
+            <span className="pn__kicker">← 前の記事</span>
+            <span className="pn__title">{prev.title}</span>
+          </a>
+        )}
+        {next && (
+          <a className="pn__link pn__next" href={`/blog/posts/${next.slug}`}>
+            <span className="pn__kicker">次の記事 →</span>
+            <span className="pn__title">{next.title}</span>
+          </a>
+        )}
       </nav>
     </article>
   );
