@@ -1,6 +1,5 @@
 import { getAllPosts, getPost, getPrevNext } from "@/lib/posts";
 import { renderMarkdown } from "@/lib/markdown";
-import Breadcrumb from "@/components/Breadcrumb";
 
 const BASE = "https://playotoron.com"; // 1か所に集約
 
@@ -32,12 +31,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     twitter: { card: "summary_large_image" },
     robots: p.draft ? { index: false, follow: false } : undefined
   };
-}
-
-function readingTime(text: string) {
-  const wpm = 400;
-  const words = text.replace(/\s+/g, "").length;
-  return Math.max(1, Math.round(words / wpm)) + "分";
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
@@ -74,50 +67,31 @@ export default async function PostPage({ params }: { params: { slug: string } })
   };
 
   return (
-    <>
-      <Breadcrumb
-        items={[
-          { label: "オトロン", href: "/" },
-          { label: "ブログ", href: "/blog" },
-          { label: p.title }
-        ]}
-      />
-      <article className="post">
-        <a href="/blog" className="meta">← 記事一覧へ</a>
-      <h1>{p.title}</h1>
-      <div className="meta">
-        {new Date(p.date).toLocaleDateString("ja-JP")}
-        {" ・ 読了目安: "}{readingTime(p.content)}
+    <article className="post">
+      <p className="backline">
+        <a href="/blog" className="backlink">← 記事一覧へ</a>
+      </p>
+
+      <h1 className="post__title">{p.title}</h1>
+      <div className="post__meta">
+        {new Date(p.date).toLocaleDateString("ja-JP")}・読了目安:{" "}
+        {Math.max(1, Math.round(p.content.replace(/\s+/g, "").length / 400))}分
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
 
-      {/* スマホ：上部に目次（必要なら details で折りたたみ） */}
-      <div className="toc-mobile">
-        {toc ? (
-          <details open className="toc-details">
-            <summary className="toc-summary">目次</summary>
-            <div className="toc-wrap" dangerouslySetInnerHTML={{ __html: toc }} />
-          </details>
-        ) : null}
-      </div>
-
+      {/* 目次（PCは右、SPは上） */}
       <div className="post-body-with-toc">
-        {/* PC：サイド固定の目次 */}
         {toc ? (
-          <aside className="toc-aside" aria-label="目次">
-            <div dangerouslySetInnerHTML={{ __html: toc }} />
-          </aside>
+          <aside className="toc-aside" aria-label="目次" dangerouslySetInnerHTML={{ __html: toc }} />
         ) : null}
-
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+        <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
 
-        <nav className="pn">
-          {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
-          {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
-        </nav>
-      </article>
-    </>
+      <nav className="pn">
+        {prev && <a href={`/blog/posts/${prev.slug}`}>← {prev.title}</a>}
+        {next && <a href={`/blog/posts/${next.slug}`}>{next.title} →</a>}
+      </nav>
+    </article>
   );
 }
