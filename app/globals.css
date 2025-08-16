@@ -252,3 +252,6 @@ main { padding-top: 24px; }
 
 .copyright{color: var(--ink-weak); font-size: 12px; margin: 48px 0 12px;}
 
+
+/* 検索UI削除に伴う余白の微調整（必要なら） */
+.cards{ margin-top: 8px; }
