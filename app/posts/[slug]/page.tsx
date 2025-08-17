@@ -6,6 +6,7 @@ import {
   getAdjacentPosts,
   getRelatedPosts,
 } from "@/lib/posts";
+import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 
@@ -86,6 +87,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
               />
             </div>
           </header>
+
+          {post.tags?.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {post.tags.map((t: string) => (
+                <li key={t}>
+                  <a href={`/blog/tags/${tagSlug(t)}`} className="tag-chip">
+                    {t}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
 
           <div id="post-body" className="prose prose-blue max-w-none">
             <div dangerouslySetInnerHTML={{ __html: post.html }} />
