@@ -19,6 +19,9 @@ export default async function Page() {
     .filter((p: any) => !p.draft)
     .sort((a: any, b: any) => (a.date < b.date ? 1 : -1));
 
+  const featured = posts.filter((p: any) => p.featured).slice(0, 3);
+  const rest = posts.filter((p: any) => !p.featured);
+
   return (
     <main className="wrap">
       <div className="hero">
@@ -40,8 +43,27 @@ export default async function Page() {
         </div>
       </div>
 
+      {featured.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-base font-semibold text-gray-700">注目記事</h2>
+          <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {featured.map((p: any) => (
+              <PostCard
+                key={p.slug}
+                slug={p.slug}
+                title={p.title}
+                description={p.description}
+                date={p.date}
+                thumb={p.thumb || p.ogImage}
+                readingMinutes={p.readingMinutes}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="cards">
-        {posts.map((p: any) => (
+        {rest.map((p: any) => (
           <FadeInOnView key={p.slug}>
             <PostCard
               slug={p.slug}
@@ -49,6 +71,7 @@ export default async function Page() {
               description={p.description}
               date={p.date}
               thumb={p.thumb || p.ogImage}
+              readingMinutes={p.readingMinutes}
             />
           </FadeInOnView>
         ))}

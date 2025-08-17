@@ -7,6 +7,8 @@ export type BlogPost = {
   ogImage?: string;
   updated?: string;
   draft?: boolean;
+  featured?: boolean;
+  readingMinutes?: number;
 };
 
 declare module "@/lib/posts" {
