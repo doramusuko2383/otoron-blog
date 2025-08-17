@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
@@ -42,12 +43,13 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
             src={thumb}
             width={OG_WIDTH}
             height={OG_HEIGHT}
+            alt=""
             style={{ position: 'absolute', inset: 0, objectFit: 'cover', opacity: 0.12, filter: 'grayscale(20%)' }}
           />
         ) : null}
 
         <div style={{ position: 'absolute', top: 28, right: 28, width: 96, height: 96 }}>
-          <img src={mascot} width={96} height={96} style={{ objectFit: 'contain' }} />
+          <img src={mascot} width={96} height={96} alt="OTORON" style={{ objectFit: 'contain' }} />
         </div>
 
         <div style={{ position: 'absolute', left: 0, bottom: 0, width: '100%', height: 12, background: BRAND.fg }} />
