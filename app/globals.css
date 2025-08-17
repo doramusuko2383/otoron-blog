@@ -473,3 +473,14 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
 /* 見出しのアンカーずれ対策（ヘッダー分の余白） */
 article h2, article h3 { scroll-margin-top: 96px; }
 
+.tag-chip {
+  display: inline-block;
+  padding: .25rem .6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  background: #fff;
+  font-size: .85rem;
+  line-height: 1;
+}
+.tag-chip:hover { background: #f8fafc; }
+
