@@ -62,6 +62,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
     image: hero,
     url: `${BASE}${canonical}`,
     description: post.description,
+    timeRequired: post.readingMinutes ? `PT${post.readingMinutes}M` : undefined,
   };
 
   const hasTOC = Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
@@ -76,6 +77,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
             <time className="mt-2 block text-sm text-gray-500">
               {new Date(post.date).toLocaleDateString('ja-JP')}
             </time>
+            {typeof post.readingMinutes === 'number' && (
+              <span className="mt-1 inline-block text-xs text-gray-500">
+                約 {post.readingMinutes} 分で読めます
+              </span>
+            )}
             <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">
               <Image
                 src={hero}
@@ -137,6 +143,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     description={p.description}
                     date={p.date}
                     thumb={p.thumb}
+                    readingMinutes={p.readingMinutes}
                   />
                 ))}
               </div>

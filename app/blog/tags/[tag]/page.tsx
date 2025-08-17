@@ -31,6 +31,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
             description={p.description}
             date={p.date}
             thumb={p.thumb}
+            readingMinutes={p.readingMinutes}
           />
         ))}
       </div>

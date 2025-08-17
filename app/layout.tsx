@@ -3,7 +3,10 @@ import type { ReactNode } from "react";
 
 export const metadata = {
   metadataBase: new URL("https://playotoron.com"),
-  themeColor: "#6c46ff",
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#60A5FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#111827' },
+  ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

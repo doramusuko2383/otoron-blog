@@ -6,8 +6,8 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeExternalLinks from "rehype-external-links";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import { visit } from "unist-util-visit";
 
 // 見出しから簡易TOCを作るプラグイン（h2/h3）
 function collectToc() {
@@ -50,6 +50,25 @@ function collectToc() {
   };
 }
 
+function rehypeExternalLinks() {
+  return (tree: any) => {
+    visit(tree, "element", (node: any) => {
+      if (node.tagName !== "a") return;
+      const href = node.properties?.href;
+      if (typeof href !== "string") return;
+      if (/^https?:\/\//i.test(href)) {
+        node.properties = {
+          ...node.properties,
+          target: "_blank",
+          rel: Array.from(
+            new Set([...(node.properties?.rel || []), "nofollow", "noopener", "noreferrer"])
+          ),
+        };
+      }
+    });
+  };
+}
+
 // rehype-sanitize の許可拡張（必要最低限）
 const schema = {
   ...defaultSchema,
@@ -58,7 +77,7 @@ const schema = {
     a: [
       ...(defaultSchema.attributes?.a || []),
       ["target", ["_blank"]],
-      ["rel", ["noopener", "noreferrer"]],
+      ["rel", ["noopener", "noreferrer", "nofollow"]],
     ],
     img: [
       ...(defaultSchema.attributes?.img || []),
@@ -96,10 +115,7 @@ export async function renderMarkdown(
         value: " #",
       },
     })
-    .use(rehypeExternalLinks, {
-      target: "_blank",
-      rel: ["noopener", "noreferrer"],
-    })
+    .use(rehypeExternalLinks)
     .use(rehypeSanitize, schema as any)
     .use(rehypeStringify)
     .process(md);
@@ -110,3 +126,5 @@ export async function renderMarkdown(
     headings: (file.data as any).headings ?? [],
   };
 }
+
+export { rehypeExternalLinks };
