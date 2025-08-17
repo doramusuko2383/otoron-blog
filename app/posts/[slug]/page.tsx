@@ -22,7 +22,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const title = `${p.title} | オトロン公式ブログ`;
   const canonical = `/blog/posts/${p.slug}`;
   const url = `${BASE}${canonical}`;
-  const hero = p.thumb || p.ogImage || `/og/${p.slug}`;
+  const hero = p.thumb || p.ogImage || '/otolon_face.webp';
+  const ogAuto = `/og/${p.slug}`;
   return {
     title,
     description: p.description,
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url,
       title,
       description: p.description,
-      images: [{ url: hero, width: 1200, height: 630 }],
+      images: [{ url: ogAuto, width: 1200, height: 630 }],
       locale: "ja_JP",
       publishedTime: p.date,
       modifiedTime: p.updated ?? p.date,

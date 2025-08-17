@@ -6,11 +6,12 @@ import { getAllPostsMeta } from "@/lib/posts";
 const MASCOT = "/otoron.webp";
 
 export const metadata = {
-  title: "オトロン公式ブログ",
-  description:
-    "絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。",
-  alternates: { canonical: "https://playotoron.com/blog" },
-  robots: { index: true, follow: true },
+  title: 'ブログ | オトロン',
+  description: '公式サイトと統一感のある軽量ブログ',
+  alternates: {
+    canonical: '/blog',
+    types: { 'application/rss+xml': '/rss.xml' },
+  },
 };
 
 export default async function Page() {
