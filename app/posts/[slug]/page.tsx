@@ -106,12 +106,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 </span>
               )}
             </div>
-            {typeof post.readingMinutes === 'number' && (
-              <span className="mt-1 inline-block text-xs text-gray-500">
-                約 {post.readingMinutes} 分で読めます
-              </span>
-            )}
-            <div className="mt-2">
+            <div className="mt-1 flex items-center gap-2">
+              {typeof post.readingMinutes === 'number' && (
+                <span className="text-xs text-gray-500">
+                  約 {post.readingMinutes} 分で読めます
+                </span>
+              )}
               <CopyLink url={`${BASE}${canonical}`} />
             </div>
             <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">

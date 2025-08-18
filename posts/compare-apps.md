@@ -2,7 +2,6 @@
 title: "音感アプリの選び方：幼児向けに大事な3条件"
 date: "2025-08-15"
 description: "幼児に向くUIと音の品質、記録機能の3点でチェック。"
-thumb: "/thumbs/compare-apps.jpg"
 ogImage: "/ogp.png"
 tags: ["アプリ比較", "幼児"]
 ---
