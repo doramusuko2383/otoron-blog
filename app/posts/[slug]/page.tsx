@@ -9,6 +9,7 @@ import {
 import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
+import CopyLink from "@/components/CopyLink";
 
 const BASE = "https://playotoron.com";
 const FALLBACK_THUMB = "/otolon_face.webp";
@@ -35,7 +36,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url,
       title,
       description: p.description,
-      images: [{ url: ogAuto, width: 1200, height: 630 }],
+      images: [{
+        url: ogAuto,
+        width: 1200,
+        height: 630,
+        alt: `${p.title} | オトロン公式ブログ`,
+      }],
       locale: "ja_JP",
       publishedTime: p.date,
       modifiedTime: p.updated ?? p.date,
@@ -64,6 +70,19 @@ export default async function PostPage({ params }: { params: { slug: string } })
     description: post.description,
     timeRequired: post.readingMinutes ? `PT${post.readingMinutes}M` : undefined,
   };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "ブログ", item: `${BASE}/blog` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: post.title,
+        item: `${BASE}${canonical}`,
+      },
+    ],
+  };
 
   const hasTOC = Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
 
@@ -74,14 +93,27 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
-            <time className="mt-2 block text-sm text-gray-500">
-              {new Date(post.date).toLocaleDateString('ja-JP')}
-            </time>
+            <div className="mt-1 text-xs text-gray-500 space-x-2">
+              <time dateTime={post.date}>
+                公開: {new Date(post.date).toLocaleDateString('ja-JP')}
+              </time>
+              {post.updated && post.updated !== post.date && (
+                <span>
+                  ／ 更新:{" "}
+                  <time dateTime={post.updated}>
+                    {new Date(post.updated).toLocaleDateString('ja-JP')}
+                  </time>
+                </span>
+              )}
+            </div>
             {typeof post.readingMinutes === 'number' && (
               <span className="mt-1 inline-block text-xs text-gray-500">
                 約 {post.readingMinutes} 分で読めます
               </span>
             )}
+            <div className="mt-2">
+              <CopyLink url={`${BASE}${canonical}`} />
+            </div>
             <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">
               <Image
                 src={hero}
@@ -161,6 +193,10 @@ export default async function PostPage({ params }: { params: { slug: string } })
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
           />
         </article>
 
