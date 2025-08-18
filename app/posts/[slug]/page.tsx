@@ -93,21 +93,22 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="mt-1 flex items-center gap-2">
-              <span className="text-xs text-gray-500">
+            <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+              <time dateTime={post.date}>
                 公開: {new Date(post.date).toLocaleDateString('ja-JP')}
-              </span>
+              </time>
               {post.updated && post.updated !== post.date && (
-                <span className="text-xs text-gray-500">
-                  ／ 更新: {new Date(post.updated).toLocaleDateString('ja-JP')}
+                <span>
+                  ／ 更新:{' '}
+                  <time dateTime={post.updated}>
+                    {new Date(post.updated).toLocaleDateString('ja-JP')}
+                  </time>
                 </span>
               )}
               {typeof post.readingMinutes === 'number' && (
-                <span className="text-xs text-gray-500">
-                  ／ 約 {post.readingMinutes} 分で読めます
-                </span>
+                <span>／ 約 {post.readingMinutes} 分で読めます</span>
               )}
-              <CopyLink url={`${BASE}${canonical}`} />
+              <CopyLink url={`${BASE}${canonical}`} className="ml-1" />
             </div>
             <div className="mt-4">
               <Image
