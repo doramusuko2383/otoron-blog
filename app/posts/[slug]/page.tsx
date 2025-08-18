@@ -93,35 +93,31 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="mt-1 text-xs text-gray-500 space-x-2">
-              <time dateTime={post.date}>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-xs text-gray-500">
                 公開: {new Date(post.date).toLocaleDateString('ja-JP')}
-              </time>
+              </span>
               {post.updated && post.updated !== post.date && (
-                <span>
-                  ／ 更新:{" "}
-                  <time dateTime={post.updated}>
-                    {new Date(post.updated).toLocaleDateString('ja-JP')}
-                  </time>
+                <span className="text-xs text-gray-500">
+                  ／ 更新: {new Date(post.updated).toLocaleDateString('ja-JP')}
                 </span>
               )}
-            </div>
-            <div className="mt-1 flex items-center gap-2">
               {typeof post.readingMinutes === 'number' && (
                 <span className="text-xs text-gray-500">
-                  約 {post.readingMinutes} 分で読めます
+                  ／ 約 {post.readingMinutes} 分で読めます
                 </span>
               )}
               <CopyLink url={`${BASE}${canonical}`} />
             </div>
-            <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">
+            <div className="mt-4">
               <Image
                 src={hero}
                 alt={post.title}
-                fill
+                width={1200}
+                height={630}               // 16:9相当
                 priority
                 sizes="(max-width:768px) 100vw, 720px"
-                className="object-cover"
+                className="w-full h-auto rounded-xl border border-gray-100 object-cover"
               />
             </div>
           </header>
