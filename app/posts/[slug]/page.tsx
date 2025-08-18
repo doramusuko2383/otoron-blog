@@ -11,7 +11,7 @@ import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 import CopyLink from "@/components/CopyLink";
 
-const BASE = "https://playotoron.com";
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://playotoron.com";
 const FALLBACK_THUMB = "/otolon_face.webp";
 
 export async function generateStaticParams() {
