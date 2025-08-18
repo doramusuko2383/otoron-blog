@@ -19,8 +19,23 @@ export async function generateMetadata({ params }: { params: { tag: string } }) 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const posts = await getPostsByTag(params.tag);
   const name = await getTagName(params.tag);
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `タグ: ${name}`,
+    itemListElement: posts.map((p: any, i: number) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `/blog/posts/${p.slug}`,
+      name: p.title,
+    })),
+  };
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+      />
       <h1 className="text-xl font-semibold">タグ: {name}</h1>
       <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {posts.map((p: any) => (
