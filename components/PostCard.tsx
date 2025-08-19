@@ -10,23 +10,26 @@ type CardProps = {
 
 export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
   const href = `/blog/posts/${slug}`;
-  const img  = thumb || '/otolon_face.webp';
+  const img = thumb || '/otolon_face.webp';
 
   return (
     <a
       href={href}
       className="group block rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md"
     >
-      {/* ←ここが超重要：relative + aspect + overflow-hidden */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-gray-50">
-        <Image
-          src={img}
-          alt={title}
-          fill
-          sizes="(max-width: 640px) 100vw, 520px"
-          className="object-cover"
-          priority={false}
-        />
+      {/* 高さを“確実に”確保（Tailwindに依存しない） */}
+      <div className="rounded-t-2xl overflow-hidden bg-gray-50">
+        <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
+          {/* 親が relative / 高さあり → fill が安全に使える */}
+          <Image
+            src={img}
+            alt={title}
+            fill
+            sizes="(max-width: 640px) 100vw, 520px"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
       </div>
 
       <div className="p-4">
@@ -39,4 +42,3 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
     </a>
   );
 }
-
