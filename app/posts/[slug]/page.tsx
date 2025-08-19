@@ -110,7 +110,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               )}
               <CopyLink url={`${BASE}${canonical}`} className="ml-1" />
             </div>
-            <div className="mt-4">
+            <div className="mt-4 post-hero rounded-xl border border-gray-100 overflow-hidden">
               <Image
                 src={hero}
                 alt={post.title}
@@ -118,7 +118,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 height={630}               // 16:9相当
                 priority
                 sizes="(max-width:768px) 100vw, 720px"
-                className="w-full h-auto rounded-xl border border-gray-100 object-cover"
+                className="w-full h-auto"
               />
             </div>
           </header>
