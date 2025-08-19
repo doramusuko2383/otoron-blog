@@ -1,5 +1,6 @@
 export const runtime = "nodejs";
 import PostCard from "@/components/PostCard";
+import Reveal from "@/components/Reveal";
 import { getAllTags, getPostsByTag, getTagName } from "@/lib/tags";
 
 export async function generateStaticParams() {
@@ -39,15 +40,15 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       <h1 className="text-xl font-semibold">タグ: {name}</h1>
       <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {posts.map((p: any) => (
-          <PostCard
-            key={p.slug}
-            slug={p.slug}
-            title={p.title}
-            description={p.description}
-            date={p.date}
-            thumb={p.thumb}
-            readingMinutes={p.readingMinutes}
-          />
+          <Reveal key={p.slug}>
+            <PostCard
+              slug={p.slug}
+              title={p.title}
+              description={p.description}
+              date={p.date}
+              thumb={p.thumb}
+            />
+          </Reveal>
         ))}
       </div>
     </main>

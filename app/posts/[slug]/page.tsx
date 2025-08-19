@@ -10,6 +10,7 @@ import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 import CopyLink from "@/components/CopyLink";
+import Reveal from "@/components/Reveal";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://playotoron.com";
 const FALLBACK_THUMB = "/otolon_face.webp";
@@ -108,7 +109,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               {typeof post.readingMinutes === 'number' && (
                 <span>／ 約 {post.readingMinutes} 分で読めます</span>
               )}
-              <CopyLink url={`${BASE}${canonical}`} className="ml-1" />
+              <CopyLink url={`${BASE}${canonical}`} variant="icon" className="ml-1" />
             </div>
             <div className="mt-4 post-hero rounded-xl border border-gray-100 overflow-hidden">
               <Image
@@ -165,15 +166,15 @@ export default async function PostPage({ params }: { params: { slug: string } })
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {related.map((p: any) => (
-                  <PostCard
-                    key={p.slug}
-                    slug={p.slug}
-                    title={p.title}
-                    description={p.description}
-                    date={p.date}
-                    thumb={p.thumb}
-                    readingMinutes={p.readingMinutes}
-                  />
+                  <Reveal key={p.slug}>
+                    <PostCard
+                      slug={p.slug}
+                      title={p.title}
+                      description={p.description}
+                      date={p.date}
+                      thumb={p.thumb}
+                    />
+                  </Reveal>
                 ))}
               </div>
             </section>
