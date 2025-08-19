@@ -501,3 +501,16 @@ article h2, article h3 { scroll-margin-top: 96px; }
   }
 }
 
+/* ---- reveal once ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  will-change: opacity, transform;
+}
+.reveal-in {
+  animation: fadeUp .5s ease-out forwards;
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: none; }
+}
+
