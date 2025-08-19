@@ -1,6 +1,5 @@
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
-import Reveal from "@/components/Reveal";
 import { getAllPostsMeta } from "@/lib/posts";
 
 const MASCOT = "/otoron.webp";
@@ -23,7 +22,7 @@ export default async function Page() {
   const rest = posts.filter((p: any) => !p.featured);
 
   return (
-    <main className="wrap">
+    <main className="mx-auto max-w-5xl px-4 py-12">
       <div className="hero">
         <div className="heroText">
           <h1 className="pageTitle">オトロン公式ブログ</h1>
@@ -48,33 +47,31 @@ export default async function Page() {
           <h2 className="text-base font-semibold text-gray-700">注目記事</h2>
           <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {featured.map((p: any) => (
-              <Reveal key={p.slug}>
-                <PostCard
-                  slug={p.slug}
-                  title={p.title}
-                  description={p.description}
-                  date={p.date}
-                  thumb={p.thumb || p.ogImage}
-                />
-              </Reveal>
+              <PostCard
+                key={p.slug}
+                slug={p.slug}
+                title={p.title}
+                description={p.description}
+                date={p.date}
+                thumb={p.thumb || p.ogImage}
+              />
             ))}
           </div>
         </section>
       )}
 
-      <section className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {rest.map((p: any) => (
-          <Reveal key={p.slug}>
-            <PostCard
-              slug={p.slug}
-              title={p.title}
-              description={p.description}
-              date={p.date}
-              thumb={p.thumb || p.ogImage}
-            />
-          </Reveal>
+          <PostCard
+            key={p.slug}
+            slug={p.slug}
+            title={p.title}
+            description={p.description}
+            date={p.date}
+            thumb={p.thumb || p.ogImage}
+          />
         ))}
-      </section>
+      </div>
     </main>
   );
 }

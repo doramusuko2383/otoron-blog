@@ -10,7 +10,6 @@ import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 import CopyLink from "@/components/CopyLink";
-import Reveal from "@/components/Reveal";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://playotoron.com";
 const FALLBACK_THUMB = "/otolon_face.webp";
@@ -166,15 +165,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {related.map((p: any) => (
-                  <Reveal key={p.slug}>
-                    <PostCard
-                      slug={p.slug}
-                      title={p.title}
-                      description={p.description}
-                      date={p.date}
-                      thumb={p.thumb}
-                    />
-                  </Reveal>
+                  <PostCard
+                    key={p.slug}
+                    slug={p.slug}
+                    title={p.title}
+                    description={p.description}
+                    date={p.date}
+                    thumb={p.thumb}
+                  />
                 ))}
               </div>
             </section>
