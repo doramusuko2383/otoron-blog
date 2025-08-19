@@ -47,14 +47,7 @@ export default async function Page() {
           <h2 className="text-base font-semibold text-gray-700">注目記事</h2>
           <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {featured.map((p: any) => (
-              <PostCard
-                key={p.slug}
-                slug={p.slug}
-                title={p.title}
-                description={p.description}
-                date={p.date}
-                thumb={p.thumb || p.ogImage}
-              />
+              <PostCard key={p.slug} {...p} />
             ))}
           </div>
         </section>
@@ -62,14 +55,7 @@ export default async function Page() {
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {rest.map((p: any) => (
-          <PostCard
-            key={p.slug}
-            slug={p.slug}
-            title={p.title}
-            description={p.description}
-            date={p.date}
-            thumb={p.thumb || p.ogImage}
-          />
+          <PostCard key={p.slug} {...p} />
         ))}
       </div>
     </main>

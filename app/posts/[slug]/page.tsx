@@ -135,7 +135,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </ul>
           )}
 
-          <div id="post-body" className="prose prose-blue max-w-none">
+          {/* 本文は .prose 内だけ */}
+          <div className="prose prose-blue max-w-none">
             <div dangerouslySetInnerHTML={{ __html: post.html }} />
           </div>
 
@@ -157,12 +158,10 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </div>
           </nav>
 
-          {/* 関連記事（← 重複があれば他を削除して1回だけに） */}
+          {/* 関連記事 */}
           {related?.length > 0 && (
             <section aria-labelledby="related" className="mt-12">
-              <h2 id="related" className="text-lg font-semibold">
-                関連記事
-              </h2>
+              <h2 id="related" className="text-lg font-semibold">関連記事</h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {related.map((p: any) => (
                   <PostCard
