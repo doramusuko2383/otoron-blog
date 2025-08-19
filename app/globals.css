@@ -491,3 +491,13 @@ article h2, article h3 { scroll-margin-top: 96px; }
   border-radius: 0.75rem; /* 12px 相当 */
 }
 
+/* スマホで横長ヒーロー画像の高さを抑える */
+@media (max-width: 640px) {
+  .post-hero img {
+    max-height: 220px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+}
+
