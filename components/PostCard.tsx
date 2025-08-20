@@ -10,19 +10,18 @@ type CardProps = {
 
 export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
   const href = `/blog/posts/${slug}`;
-  const src  = thumb || "/otolon_face.webp";
+  const img = thumb || "/otolon_face.webp";
 
   return (
-    <a href={href} className="group block rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
+    <a href={href} className="group block rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
       {/* ←画像は必ず「枠」で囲う（16/9）。ここが最重要 */}
       <div className="relative w-full overflow-hidden rounded-t-2xl" style={{ aspectRatio: "16 / 9" }}>
         <Image
-          src={src}
+          src={img}
           alt={title}
           fill
+          sizes="(max-width:640px) 100vw, 360px"
           className="object-cover"
-          // ここも重要：一覧カードで実際に使う幅だけを宣言
-          sizes="(min-width:1024px) 560px, (min-width:640px) 50vw, 100vw"
           priority={false}
         />
       </div>
