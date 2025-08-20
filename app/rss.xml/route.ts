@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { getAllPostsMeta } from '@/lib/posts';
+import { getAllPostsMeta, type PostMeta } from '@/lib/posts';
 
 export const runtime = 'nodejs';
 
@@ -14,9 +14,9 @@ function siteBase() {
 
 export async function GET() {
   const SITE = siteBase();
-  const posts = (await getAllPostsMeta() as any[])
-    .filter((p: any) => !p.draft)
-    .sort((a: any, b: any) => (a.date < b.date ? 1 : -1))
+  const posts: PostMeta[] = (await getAllPostsMeta())
+    .filter((p) => !p.draft)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
     .slice(0, 20);
 
   const items = posts.map(p => {

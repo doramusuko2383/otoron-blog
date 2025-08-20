@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { getAllPostsMeta } from '@/lib/posts';
+import { getAllPostsMeta, type PostMeta } from '@/lib/posts';
 import { getAllTags } from '@/lib/tags';
 
 export const runtime = 'nodejs';
@@ -15,13 +15,13 @@ function siteBase() {
 
 export async function GET() {
   const SITE = siteBase();
-  const posts = (await getAllPostsMeta() as any[]).filter((p: any) => !p.draft);
+  const posts: PostMeta[] = (await getAllPostsMeta()).filter((p) => !p.draft);
   const tags = await getAllTags();
   const nowISO = new Date().toISOString();
 
   const urls = [
     { loc: `${SITE}/blog`, lastmod: nowISO },
-    ...posts.map((p: any) => ({
+    ...posts.map((p) => ({
       loc: `${SITE}/blog/posts/${p.slug}`,
       lastmod: new Date(p.date).toISOString(),
     })),

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
-import { getAllPostsMeta } from "@/lib/posts";
+import { getAllPostsMeta, type PostMeta } from "@/lib/posts";
 
 const MASCOT = "/otoron.webp";
 
@@ -14,16 +14,16 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const posts = getAllPostsMeta()
-    .filter((p: any) => !p.draft)
-    .sort((a: any, b: any) => (a.date < b.date ? 1 : -1));
+  const posts: PostMeta[] = (await getAllPostsMeta())
+    .filter((p) => !p.draft)
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
 
   const [latest, ...others] = posts;
-  const hero = latest.thumb || latest.ogImage || "/otolon_face.webp";
+  const hero = latest.thumb ?? latest.ogImage ?? "/otolon_face.webp";
   const title = latest.title;
 
-  const featured = others.filter((p: any) => p.featured).slice(0, 3);
-  const rest = others.filter((p: any) => !p.featured);
+  const featured = others.filter((p) => p.featured).slice(0, 3);
+  const rest = others.filter((p) => !p.featured);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
@@ -64,16 +64,30 @@ export default async function Page() {
         <section className="mb-8">
           <h2 className="text-base font-semibold text-gray-700">注目記事</h2>
           <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {featured.map((p: any) => (
-              <PostCard key={p.slug} {...p} />
+            {featured.map((p) => (
+              <PostCard
+                key={p.slug}
+                slug={p.slug}
+                title={p.title}
+                description={p.description}
+                date={p.date}
+                thumb={p.thumb}
+              />
             ))}
           </div>
         </section>
       )}
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {rest.map((p: any) => (
-          <PostCard key={p.slug} {...p} />
+        {rest.map((p) => (
+          <PostCard
+            key={p.slug}
+            slug={p.slug}
+            title={p.title}
+            description={p.description}
+            date={p.date}
+            thumb={p.thumb}
+          />
         ))}
       </div>
     </main>
