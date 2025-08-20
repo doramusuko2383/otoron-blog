@@ -1,13 +1,4 @@
-import { getAllPostsMeta } from "@/lib/posts";
-
-type PostMeta = {
-  slug: string;
-  title?: string;
-  description?: string;
-  date?: string;
-  draft?: boolean;
-  tags?: string[];
-};
+import { getAllPostsMeta, type PostMeta } from "@/lib/posts";
 
 export function tagSlug(s: string) {
   return s
@@ -18,8 +9,7 @@ export function tagSlug(s: string) {
 }
 
 export async function getAllTags() {
-  const posts = (await getAllPostsMeta() as unknown as PostMeta[])
-    .filter(p => !p.draft);
+  const posts: PostMeta[] = (await getAllPostsMeta()).filter(p => !p.draft);
 
   const acc = new Map<string, { slug: string; name: string; count: number }>();
   for (const p of posts) {
@@ -37,10 +27,11 @@ export async function getAllTags() {
 
 export async function getPostsByTag(tagOrSlug: string) {
   const slug = tagSlug(tagOrSlug);
-  const posts = (await getAllPostsMeta() as unknown as PostMeta[])
-    .filter(p =>
-      !p.draft &&
-      (Array.isArray(p.tags) ? p.tags : []).some(t => tagSlug(t) === slug)
+  const posts: PostMeta[] = (await getAllPostsMeta())
+    .filter(
+      (p) =>
+        !p.draft &&
+        (Array.isArray(p.tags) ? p.tags : []).some((t) => tagSlug(t) === slug)
     )
     .sort((a, b) => (a.date ?? "") < (b.date ?? "") ? 1 : -1);
   return posts;

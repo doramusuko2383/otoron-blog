@@ -1,22 +1,40 @@
-export type BlogPost = {
-  slug: string;
-  date: string;
-  content: string;
-  title?: string;
-  description?: string;
-  ogImage?: string;
-  updated?: string;
-  draft?: boolean;
-  featured?: boolean;
-  readingMinutes?: number;
-};
-
 declare module "@/lib/posts" {
-  import type { BlogPost } from "../types/posts";
+  export type PostMeta = {
+    slug: string;
+    title: string;
+    description: string;
+    date: string;
+    updated?: string;
+    ogImage?: string;
+    thumb?: string;
+    featured?: boolean;
+    tags?: string[];
+    draft?: boolean;
+    readingMinutes?: number;
+  };
+
+  export type BlogPost = PostMeta & {
+    content: string;
+  };
+
   export function getAllPosts(): BlogPost[];
+  export function getAllPostsMeta(): PostMeta[];
   export function getPost(slug: string): BlogPost | null;
   export function getPrevNext(slug: string): {
     prev: BlogPost | null;
     next: BlogPost | null;
   };
+  export function getPostBySlug(slug: string): Promise<
+    (BlogPost & {
+      html: string;
+      headings: { depth: number; text: string; id: string }[];
+    }) | null
+  >;
+  export function getAdjacentPosts(slug: string): Promise<{
+    prev: BlogPost | null;
+    next: BlogPost | null;
+  }>;
+  export function getRelatedPosts(slug: string, limit?: number): Promise<PostMeta[]>;
+  export function getAllSlugs(): string[];
 }
+
