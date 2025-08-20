@@ -1,5 +1,11 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+
+/* 画像が親幅を超えて暴れないための保険 */
+img, picture, video, canvas, svg { max-width: 100%; height: auto; }
+
+/* prose(typography) 使用時も高さが固定化されないように */
+.prose img { height: auto; }
 a,.brand{color:var(--brand);text-decoration:none}
 a:hover{text-decoration:underline;text-decoration-color:var(--brand-600)}
 a:focus-visible{outline:2px solid var(--brand-600);outline-offset:2px}
