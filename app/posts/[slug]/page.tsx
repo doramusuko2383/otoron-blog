@@ -9,10 +9,7 @@ import {
 import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
-import CopyLink from "@/components/CopyLink";
-
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://playotoron.com";
-const FALLBACK_THUMB = "/otolon_face.webp";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -57,7 +54,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   const { prev, next }: any = await getAdjacentPosts(post.slug);
   const related = await getRelatedPosts(post.slug, 2);
-  const hero = post.thumb || post.ogImage || FALLBACK_THUMB;
+  const hero = post.thumb || post.ogImage || "/otolon_face.webp";
   const canonical = `/blog/posts/${post.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -93,32 +90,22 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <article className="md:col-span-8">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-              <time dateTime={post.date}>
-                公開: {new Date(post.date).toLocaleDateString('ja-JP')}
-              </time>
-              {post.updated && post.updated !== post.date && (
-                <span>
-                  ／ 更新:{' '}
-                  <time dateTime={post.updated}>
-                    {new Date(post.updated).toLocaleDateString('ja-JP')}
-                  </time>
-                </span>
-              )}
-              {typeof post.readingMinutes === 'number' && (
-                <span>／ 約 {post.readingMinutes} 分で読めます</span>
-              )}
-              <CopyLink url={`${BASE}${canonical}`} variant="icon" className="ml-1" />
-            </div>
-            <div className="mt-4 post-hero rounded-xl border border-gray-100 overflow-hidden">
+            <time className="mt-2 block text-sm text-gray-500">
+              {new Date(post.date).toLocaleDateString("ja-JP")}
+            </time>
+
+            {/* ←親に 16/9 の“枠”＋最大幅を与える。fill は object-cover で収める */}
+            <div
+              className="relative mx-auto mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100"
+              style={{ aspectRatio: "16 / 9" }}
+            >
               <Image
                 src={hero}
                 alt={post.title}
-                width={1200}
-                height={630}               // 16:9相当
+                fill
+                className="object-cover"
+                sizes="(min-width:1024px) 720px, 100vw"
                 priority
-                sizes="(max-width:768px) 100vw, 720px"
-                className="w-full h-auto"
               />
             </div>
           </header>
