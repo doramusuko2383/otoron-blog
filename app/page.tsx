@@ -18,8 +18,12 @@ export default async function Page() {
     .filter((p: any) => !p.draft)
     .sort((a: any, b: any) => (a.date < b.date ? 1 : -1));
 
-  const featured = posts.filter((p: any) => p.featured).slice(0, 3);
-  const rest = posts.filter((p: any) => !p.featured);
+  const [latest, ...others] = posts;
+  const hero = latest.thumb || latest.ogImage || "/otolon_face.webp";
+  const title = latest.title;
+
+  const featured = others.filter((p: any) => p.featured).slice(0, 3);
+  const rest = others.filter((p: any) => !p.featured);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
@@ -29,17 +33,31 @@ export default async function Page() {
           <p className="lede">
             絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
           </p>
-        </div>
-        <div className="mascot">
-          <Image
-            src={MASCOT}
-            alt="オトロン"
-            fill
-            sizes="80px"
-            className="mascotImg"
-            priority={false}
-          />
-        </div>
+      </div>
+      <div className="mascot">
+        <Image
+          src={MASCOT}
+          alt="オトロン"
+          fill
+          sizes="80px"
+          className="mascotImg"
+          priority={false}
+        />
+      </div>
+    </div>
+
+      <div
+        className="relative mx-auto mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100"
+        style={{ aspectRatio: "16 / 9" }}
+      >
+        <Image
+          src={hero}
+          alt={title}
+          fill
+          priority
+          sizes="(max-width:768px) 100vw, 720px"
+          className="object-cover"
+        />
       </div>
 
       {featured.length > 0 && (
