@@ -16,16 +16,16 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
     <a href={href} className="group block rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
       {/* サムネ */}
       <div
-        className="relative w-full overflow-hidden rounded-t-2xl bg-gray-50"
+        className="overflow-hidden rounded-t-2xl bg-gray-50"
         style={{ aspectRatio: "16 / 9" }}
       >
         <Image
           src={img}
           alt={title}
-          fill
+          width={640}
+          height={360}
+          className="h-full w-full object-cover"
           sizes="(max-width: 640px) 100vw, 384px"
-          className="object-cover"
-          priority={false}
         />
       </div>
 

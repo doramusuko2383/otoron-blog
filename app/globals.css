@@ -4,22 +4,6 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:s
 /* 画像が親幅を超えて暴れないための保険 */
 img, picture, video, canvas, svg { max-width: 100%; height: auto; }
 
-/* Next/Image wrapper: 高さは “決めない”（各コンポーネント側で決める） */
-span[data-nimg]{
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;        /* ← 高さはここで与えない */
-  overflow: hidden;
-}
-/* 中の <img> は fill のままでOK */
-span[data-nimg] > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
 /* prose(typography) 使用時も高さが固定化されないように */
 .prose img { height: auto; }
