@@ -4,9 +4,15 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:s
 /* 画像が親幅を超えて暴れないための保険 */
 img, picture, video, canvas, svg { max-width: 100%; height: auto; }
 
-/* next/image が吐く <img> には一切干渉しない（念のため） */
+/* Next/Image の fill を安全に動かすための最小限の調整 */
+span[data-nimg] {
+  position: relative;      /* ← これが無いと img の absolute がビューポート基準になって崩れます */
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 span[data-nimg] > img {
-  all: unset;
   position: absolute;
   inset: 0;
   width: 100%;
