@@ -96,7 +96,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
             {/* ←親に 16/9 の“枠”＋最大幅を与える。fill は object-cover で収める */}
             <div
-              className="relative mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100"
+              className="relative mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100 bg-gray-50"
               style={{ aspectRatio: "16 / 9" }}
             >
               <Image
@@ -104,7 +104,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 alt={post.title}
                 fill
                 priority
-                sizes="(max-width:768px) 100vw, 720px"
+                sizes="(max-width: 768px) 100vw, 720px"
                 className="object-cover"
               />
             </div>

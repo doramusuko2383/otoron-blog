@@ -47,16 +47,16 @@ export default async function Page() {
     </div>
 
       <div
-        className="relative mx-auto mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100"
+        className="relative mx-auto mt-4 w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-100 bg-gray-50"
         style={{ aspectRatio: "16 / 9" }}
       >
         <Image
           src={hero}
           alt={title}
           fill
-          priority
-          sizes="(max-width:768px) 100vw, 720px"
+          sizes="(max-width: 768px) 100vw, 960px"
           className="object-cover"
+          priority
         />
       </div>
 

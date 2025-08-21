@@ -448,8 +448,6 @@ h1.page-title{ font-size:clamp(28px,5vw,40px); line-height:1.2; margin:24px 0 8p
 
 /* ========== Post */
 .postHeader { margin-bottom: 18px; }
-.heroMedia { position: relative; width: 100%; height: clamp(180px, 36vw, 360px); border-radius: 14px; overflow: hidden; background: #f6f7fb; }
-.heroMediaImg { object-fit: cover; }
 .postTitle { margin: 14px 0 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.25; }
 .meta { color: var(--muted); font-size: 14px; }
 
@@ -507,16 +505,6 @@ article h2, article h3 { scroll-margin-top: 96px; }
   border-radius: 0.75rem; /* 12px 相当 */
 }
 
-/* スマホで横長ヒーロー画像の高さを抑える */
-@media (max-width: 640px) {
-  .post-hero img {
-    max-height: 220px;
-    width: 100%;
-    object-fit: cover;
-    object-position: center 20%;
-  }
-}
-
 /* ---- reveal once ---- */
 .reveal {
   opacity: 0;
@@ -529,4 +517,11 @@ article h2, article h3 { scroll-margin-top: 96px; }
 @keyframes fadeUp {
   to { opacity: 1; transform: none; }
 }
+
+/* Next/Image の fill が親をはみ出さないための“安全策” */
+.nimg, .nimg span, .nimg img { display:block }
+img, picture, video, canvas { max-width: 100%; height: auto }
+
+/* もし過去の修正で「高さを決め打ち」していたクラスがあれば無効化 */
+/* 例: .post-hero { height: auto !important; } */
 
