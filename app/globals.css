@@ -509,8 +509,8 @@ article h2, article h3 { scroll-margin-top: 96px; }
   to { opacity: 1; transform: none; }
 }
 
-/* Next/Image の fill が親をはみ出さないための“安全策” */
-.nimg, .nimg span, .nimg img { display:block }
+/* Next/Image の wrapper をブロック要素化するだけ（高さは決めない） */
+span[data-nimg] { display: block; }
 img, picture, video, canvas { max-width: 100%; height: auto }
 
 /* もし過去の修正で「高さを決め打ち」していたクラスがあれば無効化 */

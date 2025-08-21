@@ -1,4 +1,5 @@
 import Image from "next/image";
+import clsx from "clsx";
 
 type CardProps = {
   slug: string;
@@ -9,23 +10,23 @@ type CardProps = {
 };
 
 export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
-  const href = `/blog/posts/${slug}`;
   const img = thumb || "/otolon_face.webp";
+  const isSquareFallback = img.includes("otolon_face");
 
   return (
-    <a href={href} className="group block rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
-      {/* サムネ */}
-      <div
-        className="overflow-hidden rounded-t-2xl bg-gray-50"
-        style={{ aspectRatio: "16 / 9" }}
-      >
+    <a
+      href={`/blog/posts/${slug}`}
+      className="group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
+    >
+      {/* 画像ラッパー：ここで 16:9 を決める */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-gray-50">
         <Image
           src={img}
           alt={title}
-          width={640}
-          height={360}
-          className="h-full w-full object-cover"
-          sizes="(max-width: 640px) 100vw, 384px"
+          fill
+          sizes="(max-width:640px) 100vw, 384px"
+          className={clsx(isSquareFallback ? "object-contain" : "object-cover")}
+          priority={false}
         />
       </div>
 
