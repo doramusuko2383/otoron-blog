@@ -38,24 +38,26 @@ export default async function Page() {
         <Image
           src={MASCOT}
           alt="オトロン"
-          fill
+          width={110}
+          height={110}
           sizes="80px"
-          className="mascotImg"
+          className="mascotImg h-full w-full"
           priority={false}
         />
       </div>
     </div>
 
       <div
-        className="relative mx-auto mt-4 w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-100 bg-gray-50"
+        className="mx-auto mt-4 w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-100 bg-gray-50"
         style={{ aspectRatio: "16 / 9" }}
       >
         <Image
           src={hero}
           alt={title}
-          fill
+          width={1200}
+          height={675}
           sizes="(max-width: 768px) 100vw, 960px"
-          className="object-cover"
+          className="h-full w-full object-cover"
           priority
         />
       </div>

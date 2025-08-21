@@ -94,18 +94,19 @@ export default async function PostPage({ params }: { params: { slug: string } })
               {new Date(post.date).toLocaleDateString("ja-JP")}
             </time>
 
-            {/* ←親に 16/9 の“枠”＋最大幅を与える。fill は object-cover で収める */}
+            {/* ←親に 16/9 の“枠”＋最大幅を与えて画像を収める */}
             <div
-              className="relative mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100 bg-gray-50"
+              className="mt-4 w-full max-w-[720px] overflow-hidden rounded-xl border border-gray-100 bg-gray-50"
               style={{ aspectRatio: "16 / 9" }}
             >
               <Image
                 src={hero}
                 alt={post.title}
-                fill
+                width={1200}
+                height={675}
                 priority
                 sizes="(max-width: 768px) 100vw, 720px"
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
           </header>
