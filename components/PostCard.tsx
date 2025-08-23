@@ -14,19 +14,18 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
       href={`/blog/posts/${slug}`}
       className="group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
     >
-      <div className="w-full overflow-hidden rounded-t-2xl bg-gray-50">
+      <div className="relative w-full overflow-hidden rounded-t-2xl bg-gray-50 aspect-[16/9] max-h-44 sm:max-h-52">
         {thumb ? (
           <Image
             alt={title}
             src={thumb}
-            width={1280}
-            height={720}
+            fill
             sizes="(max-width:640px) 100vw, 384px"
-            className="w-full h-auto object-cover"
+            className="object-cover"
             priority={false}
           />
         ) : (
-          <div className="aspect-[16/9] w-full flex items-center justify-center text-gray-400">
+          <div className="flex h-full w-full items-center justify-center text-gray-400">
             <span className="text-xs">No thumbnail</span>
           </div>
         )}
