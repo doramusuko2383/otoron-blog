@@ -1,16 +1,26 @@
-import Link from 'next/link';
-import PostCard from '@/components/PostCard';
-import { getPaginatedPosts } from '@/lib/posts';
+import Link from "next/link";
+import PostCard from "@/components/PostCard";
+import { getPaginatedPosts } from "@/lib/posts";
 
 const PAGE_SIZE = 10;
+const BASE =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app";
 
 export const revalidate = 60;
 
-export default async function BlogIndexPage() {
+export default async function BlogTopPage() {
   const { items, total } = await getPaginatedPosts(0, PAGE_SIZE);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const blogLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "オトロン公式ブログ",
+    url: `${BASE}/blog`,
+  };
+
   return (
+    <>
     <main className="mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-2xl font-bold mb-6">記事一覧</h1>
 
@@ -34,6 +44,11 @@ export default async function BlogIndexPage() {
         </nav>
       )}
     </main>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(blogLd) }}
+    />
+    </>
   );
 }
 
