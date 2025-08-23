@@ -19,14 +19,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (posts.length) {
     const tags = new Set<string>();
     posts.forEach((p: any) => (p.tags ?? []).forEach((t: string) => tags.add(t)));
-    for (const tag of tags) {
+
+    // Set#forEach を使う or Array.from(tags).forEach でも可
+    tags.forEach((tag) => {
       tagUrls.push({
         url: `${base}/blog/tags/${encodeURIComponent(tag)}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.5,
       });
-    }
+    });
+
+    // 安定化したければ並び替え（任意）
+    // const sorted = Array.from(tags).sort();
+    // sorted.forEach((tag) => { ...push... });
   }
 
   const staticUrls: MetadataRoute.Sitemap = [
