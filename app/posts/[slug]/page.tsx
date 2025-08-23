@@ -95,13 +95,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </time>
 
             {/* ←親に 16/9 の“枠”＋最大幅を与えて画像を収める */}
-            <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-gray-100">
+            <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
               <Image
                 src={hero}
                 alt={post.title}
                 fill
-                priority
-                sizes="(max-width:768px) 100vw, 720px"
+                priority={false}
+                sizes="(max-width:640px) 100vw, 768px"
                 className={hero.includes("otolon_face") ? "object-contain" : "object-cover"}
               />
             </div>
