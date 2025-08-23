@@ -1,5 +1,5 @@
 import Image from "next/image";
-import clsx from "clsx";
+import { cn } from "../lib/cn";
 
 type CardProps = {
   slug: string;
@@ -25,7 +25,7 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
           alt={title}
           fill
           sizes="(max-width:640px) 100vw, 384px"
-          className={clsx(isSquareFallback ? "object-contain" : "object-cover")}
+          className={cn(isSquareFallback ? "object-contain" : "object-cover")}
           priority={false}
         />
       </div>
