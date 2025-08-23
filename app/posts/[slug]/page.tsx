@@ -9,7 +9,12 @@ import {
 import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
-const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://playotoron.com";
+import JsonLd from "@/components/JsonLd";
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app";
+
+function abs(u: string) {
+  return /^https?:\/\//.test(u) ? u : `${BASE}${u.startsWith('/') ? '' : '/'}${u}`;
+}
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -55,57 +60,62 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const { prev, next }: any = await getAdjacentPosts(post.slug);
   const related = await getRelatedPosts(post.slug, 2);
   const hero = post.thumb || post.ogImage || "/otolon_face.webp";
-  const canonical = `/blog/posts/${post.slug}`;
-  const jsonLd = {
+  const url = `${BASE}/blog/posts/${post.slug}`;
+  const image = post.ogImage || post.thumb || "/ogp.png";
+
+  const articleLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
+    description: post.description,
+    image: [abs(image)],
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
-    image: hero,
-    url: `${BASE}${canonical}`,
-    description: post.description,
-    timeRequired: post.readingMinutes ? `PT${post.readingMinutes}M` : undefined,
+    author: { "@type": "Organization", name: "OTORON" },
+    publisher: {
+      "@type": "Organization",
+      name: "OTORON",
+      // logo: { "@type": "ImageObject", url: abs('/logo.png') },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };
+
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ブログ", item: `${BASE}/blog` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: post.title,
-        item: `${BASE}${canonical}`,
-      },
+      { "@type": "ListItem", position: 1, name: "オトロン", item: `${BASE}/` },
+      { "@type": "ListItem", position: 2, name: "ブログ", item: `${BASE}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: url },
     ],
   };
 
   const hasTOC = Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
-      <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
-        {/* 本文（8カラム） */}
-        <article className="md:col-span-8">
-          <header className="mb-6">
-            <h1 className="text-2xl font-bold">{post.title}</h1>
-            <time className="mt-2 block text-sm text-gray-500">
-              {new Date(post.date).toLocaleDateString("ja-JP")}
-            </time>
+    <>
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
+          {/* 本文（8カラム） */}
+          <article className="md:col-span-8">
+            <header className="mb-6">
+              <h1 className="text-2xl font-bold">{post.title}</h1>
+              <time className="mt-2 block text-sm text-gray-500">
+                {new Date(post.date).toLocaleDateString("ja-JP")}
+              </time>
 
-            {/* ←親に 16/9 の“枠”＋最大幅を与えて画像を収める */}
-            <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-              <Image
-                src={hero}
-                alt={post.title}
-                fill
-                priority={false}
-                sizes="(max-width:640px) 100vw, 768px"
-                className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
-              />
-            </div>
-          </header>
+              {/* ←親に 16/9 の“枠”＋最大幅を与えて画像を収める */}
+              <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
+                <Image
+                  src={hero}
+                  alt={post.title}
+                  fill
+                  priority={false}
+                  sizes="(max-width:640px) 100vw, 768px"
+                  className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
+                />
+              </div>
+            </header>
 
           {post.tags?.length > 0 && (
             <ul className="mt-3 flex flex-wrap gap-2">
@@ -168,15 +178,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
               <TableOfContents headings={post.headings} />
             </details>
           )}
-
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-          />
         </article>
 
         {/* ▼ デスクトップ用 */}
@@ -187,6 +188,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </aside>
       </div>
     </main>
+    <JsonLd data={articleLd} />
+    <JsonLd data={breadcrumbLd} />
+    </>
   );
 }
 
