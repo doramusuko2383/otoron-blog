@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { cn } from "../lib/cn";
+import { cn } from "@/lib/cn";
 
 type CardProps = {
   slug: string;
@@ -11,21 +11,24 @@ type CardProps = {
 
 export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
   const img = thumb || "/otolon_face.webp";
-  const isSquareFallback = img.includes("otolon_face");
+  const isSquareFallback = img.includes("/otolon_face");
 
   return (
     <a
       href={`/blog/posts/${slug}`}
       className="group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
     >
-      {/* 画像ラッパー：ここで 16:9 を決める */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-gray-50">
+      <div className="w-full overflow-hidden rounded-t-2xl bg-gray-50">
         <Image
-          src={img}
           alt={title}
-          fill
+          src={img}
+          width={1280}            // 16:9 の元解像度（任意でOK）
+          height={720}
           sizes="(max-width:640px) 100vw, 384px"
-          className={cn(isSquareFallback ? "object-contain" : "object-cover")}
+          className={cn(
+            isSquareFallback ? "object-contain" : "object-cover",
+            "w-full h-auto"
+          )}
           priority={false}
         />
       </div>
