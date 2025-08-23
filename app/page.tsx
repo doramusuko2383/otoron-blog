@@ -47,14 +47,15 @@ export default async function Page() {
       </div>
     </div>
 
-      <div className="relative mt-4 mx-auto w-full max-w-4xl aspect-[16/9] post-hero overflow-hidden rounded-xl border bg-gray-100">
+      <div className="mt-4 mx-auto w-full max-w-4xl overflow-hidden rounded-xl border bg-gray-100">
         <Image
           src={hero}
           alt={title}
-          fill
+          width={1280}
+          height={720}
           priority
           sizes="(max-width:768px) 100vw, 720px"
-          className={hero.includes("otolon_face") ? "object-contain" : "object-cover"}
+          className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} w-full h-auto`}
         />
       </div>
 
