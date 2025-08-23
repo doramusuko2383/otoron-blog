@@ -1,36 +1,35 @@
 import Image from "next/image";
-import { cn } from "@/lib/cn";
 
-type CardProps = {
+export type CardProps = {
   slug: string;
   title: string;
   description: string;
   date: string;
-  thumb?: string;
+  thumb?: string; // あれば使う。無ければ画像は出さない
 };
 
 export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
-  const img = thumb || "/otolon_face.webp";
-  const isSquareFallback = img.includes("/otolon_face");
-
   return (
     <a
       href={`/blog/posts/${slug}`}
       className="group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
     >
       <div className="w-full overflow-hidden rounded-t-2xl bg-gray-50">
-        <Image
-          alt={title}
-          src={img}
-          width={1280}            // 16:9 の元解像度（任意でOK）
-          height={720}
-          sizes="(max-width:640px) 100vw, 384px"
-          className={cn(
-            isSquareFallback ? "object-contain" : "object-cover",
-            "w-full h-auto"
-          )}
-          priority={false}
-        />
+        {thumb ? (
+          <Image
+            alt={title}
+            src={thumb}
+            width={1280}
+            height={720}
+            sizes="(max-width:640px) 100vw, 384px"
+            className="w-full h-auto object-cover"
+            priority={false}
+          />
+        ) : (
+          <div className="aspect-[16/9] w-full flex items-center justify-center text-gray-400">
+            <span className="text-xs">No thumbnail</span>
+          </div>
+        )}
       </div>
 
       {/* テキスト */}
