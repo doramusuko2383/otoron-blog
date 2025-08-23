@@ -1,24 +1,21 @@
-export const runtime = "nodejs";
 import Link from "next/link";
 import { getAllTags } from "@/lib/tags";
 
-export const metadata = {
-  title: "トピック一覧 | オトロン公式ブログ",
-  description: "タグ別に記事を探せます。",
-  alternates: { canonical: "/blog/tags" },
-};
+export const metadata = { title: "タグ一覧 | オトロンブログ" };
 
-export default async function TagsIndex() {
-  const tags = await getAllTags();
+export default async function TagsPage() {
+  const tags = await getAllTags(); // { slug, name, count }[]
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-xl font-semibold">トピック</h1>
-      <ul className="mt-4 flex flex-wrap gap-2">
-        {tags.map((t) => (
+    <main className="mx-auto max-w-5xl px-4 py-12">
+      <h1 className="text-2xl font-bold mb-6">タグ一覧</h1>
+      <ul className="flex flex-wrap gap-3">
+        {tags.map(t => (
           <li key={t.slug}>
-            <Link href={`/blog/tags/${t.slug}`} className="tag-chip">
-              {t.name}
-              <span className="ml-1 text-gray-500">({t.count})</span>
+            <Link
+              href={`/blog/tags/${t.slug}`}
+              className="inline-block rounded-full border px-3 py-1 text-sm hover:bg-gray-50"
+            >
+              {t.name} <span className="text-gray-400">({t.count})</span>
             </Link>
           </li>
         ))}
