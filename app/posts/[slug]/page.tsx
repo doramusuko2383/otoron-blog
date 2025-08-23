@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
@@ -9,47 +10,45 @@ import {
 import { tagSlug } from "@/lib/tags";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
-import JsonLd from "@/components/JsonLd";
-const BASE = process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app";
 
-function abs(u: string) {
-  return /^https?:\/\//.test(u) ? u : `${BASE}${u.startsWith('/') ? '' : '/'}${u}`;
-}
+const BASE =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const p: any = await getPostBySlug(params.slug);
-  if (!p) return {};
-  const title = `${p.title} | オトロン公式ブログ`;
-  const canonical = `/blog/posts/${p.slug}`;
-  const url = `${BASE}${canonical}`;
-  const hero = p.thumb || p.ogImage || '/otolon_face.webp';
-  const ogAuto = `/og/${p.slug}`;
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post: any = await getPostBySlug(params.slug);
+  if (!post) return {};
+
+  const canonical = `/blog/posts/${post.slug}`;
+  const ogImage = post.ogImage || "/ogp.png";
+  const title = post.title;
+  const description = post.description;
+
   return {
     title,
-    description: p.description,
+    description,
     alternates: { canonical },
     openGraph: {
       type: "article",
-      siteName: "OTORON",
-      url,
+      url: `${BASE}${canonical}`,
       title,
-      description: p.description,
-      images: [{
-        url: ogAuto,
-        width: 1200,
-        height: 630,
-        alt: `${p.title} | オトロン公式ブログ`,
-      }],
-      locale: "ja_JP",
-      publishedTime: p.date,
-      modifiedTime: p.updated ?? p.date,
+      description,
+      images: [{ url: ogImage }],
     },
-    twitter: { card: "summary_large_image" },
-    robots: p.draft ? { index: false, follow: false } : undefined,
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+    robots: post.draft ? { index: false, follow: false } : undefined,
   };
 }
 
@@ -60,37 +59,37 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const { prev, next }: any = await getAdjacentPosts(post.slug);
   const related = await getRelatedPosts(post.slug, 2);
   const hero = post.thumb || post.ogImage || "/otolon_face.webp";
-  const url = `${BASE}/blog/posts/${post.slug}`;
-  const image = post.ogImage || post.thumb || "/ogp.png";
+  const canonical = `${BASE}/blog/posts/${post.slug}`;
+  const ogImageAbs = `${BASE}${post.ogImage || "/ogp.png"}`;
 
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
-    image: [abs(image)],
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
+    image: [ogImageAbs],
+    mainEntityOfPage: canonical,
     author: { "@type": "Organization", name: "OTORON" },
     publisher: {
       "@type": "Organization",
       name: "OTORON",
-      // logo: { "@type": "ImageObject", url: abs('/logo.png') },
+      logo: { "@type": "ImageObject", url: `${BASE}/favicon.ico` },
     },
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "オトロン", item: `${BASE}/` },
-      { "@type": "ListItem", position: 2, name: "ブログ", item: `${BASE}/blog` },
-      { "@type": "ListItem", position: 3, name: post.title, item: url },
+      { "@type": "ListItem", position: 1, name: "ブログ", item: `${BASE}/blog` },
+      { "@type": "ListItem", position: 2, name: post.title, item: canonical },
     ],
   };
 
-  const hasTOC = Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
+  const hasTOC =
+    Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
 
   return (
     <>
@@ -188,8 +187,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </aside>
       </div>
     </main>
-    <JsonLd data={articleLd} />
-    <JsonLd data={breadcrumbLd} />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+    />
     </>
   );
 }

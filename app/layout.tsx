@@ -1,11 +1,14 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-export const metadata = {
-  metadataBase: new URL("https://playotoron.com"),
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app"
+  ),
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#60A5FA' },
-    { media: '(prefers-color-scheme: dark)', color: '#111827' },
+    { media: "(prefers-color-scheme: light)", color: "#60A5FA" },
+    { media: "(prefers-color-scheme: dark)", color: "#111827" },
   ],
 };
 
