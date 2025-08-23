@@ -512,3 +512,13 @@ article h2, article h3 { scroll-margin-top: 96px; }
 /* もし過去の修正で「高さを決め打ち」していたクラスがあれば無効化 */
 /* 例: .post-hero { height: auto !important; } */
 
+/* ==== kill next/image fill の inline style（最終手段） ==== */
+/* これを付けた <Image className="img-reset" ... fill /> は、絶対配置を解除して通常の画像と同じ挙動にする */
+.img-reset[data-nimg="fill"]{
+  position: static !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  color: transparent; /* 既存の透明はそのまま */
+}
+
