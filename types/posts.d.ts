@@ -36,5 +36,14 @@ declare module "@/lib/posts" {
   }>;
   export function getRelatedPosts(slug: string, limit?: number): Promise<PostMeta[]>;
   export function getAllSlugs(): string[];
+  export function getPaginatedPosts(
+    offset?: number,
+    limit?: number
+  ): Promise<{
+    items: PostMeta[];
+    total: number;
+    nextOffset: number;
+    hasMore: boolean;
+  }>;
 }
 
