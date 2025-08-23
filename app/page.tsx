@@ -1,8 +1,9 @@
-import Image from "next/image";
-import PostCard from "@/components/PostCard";
-import { getAllPostsMeta, type PostMeta } from "@/lib/posts";
+import { getPaginatedPosts } from '@/lib/posts';
+import InfinitePosts from '@/components/InfinitePosts';
 
-const MASCOT = "/otoron.webp";
+const PAGE_SIZE = 10;
+
+export const revalidate = 60;
 
 export const metadata = {
   title: 'ブログ | オトロン',
@@ -13,81 +14,20 @@ export const metadata = {
   },
 };
 
-export default async function Page() {
-  const posts: PostMeta[] = (await getAllPostsMeta())
-    .filter((p) => !p.draft)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
-
-  const [latest, ...others] = posts;
-  const hero = latest.thumb ?? latest.ogImage ?? "/otolon_face.webp";
-  const title = latest.title;
-
-  const featured = others.filter((p) => p.featured).slice(0, 3);
-  const rest = others.filter((p) => !p.featured);
+export default async function BlogIndexPage() {
+  const { items, total, nextOffset } = await getPaginatedPosts(0, PAGE_SIZE);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
-      <div className="hero">
-        <div className="heroText">
-          <h1 className="pageTitle">オトロン公式ブログ</h1>
-          <p className="lede">
-            絶対音感トレーニングのノウハウ、幼児の耳育て、アプリ活用ガイドなどをお届けします。
-          </p>
-      </div>
-      <div className="mascot">
-        <Image
-          src={MASCOT}
-          alt="オトロン"
-          width={110}
-          height={110}
-          sizes="80px"
-          className="mascotImg h-full w-full"
-          priority={false}
-        />
-      </div>
-    </div>
+      <h1 className="text-2xl font-bold mb-6">記事一覧</h1>
 
-      <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-        <Image
-          src={hero}
-          alt={title}
-          fill
-          priority
-          sizes="(max-width:640px) 100vw, 768px"
-          className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
-        />
-      </div>
-
-      {featured.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-base font-semibold text-gray-700">注目記事</h2>
-          <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {featured.map((p) => (
-              <PostCard
-                key={p.slug}
-                slug={p.slug}
-                title={p.title}
-                description={p.description}
-                date={p.date}
-                thumb={p.thumb}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {rest.map((p) => (
-          <PostCard
-            key={p.slug}
-            slug={p.slug}
-            title={p.title}
-            description={p.description}
-            date={p.date}
-            thumb={p.thumb}
-          />
-        ))}
-      </div>
+      <InfinitePosts
+        initialItems={items}
+        initialOffset={nextOffset}
+        total={total}
+        pageSize={PAGE_SIZE}
+        gridClassName="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
+      />
     </main>
   );
 }
