@@ -21,7 +21,7 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
             src={thumb}
             fill
             sizes="(max-width:640px) 100vw, 384px"
-            className="object-cover"
+            className="object-cover img-reset"
             priority={false}
           />
         ) : (

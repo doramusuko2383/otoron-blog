@@ -54,7 +54,7 @@ export default async function Page() {
           fill
           priority
           sizes="(max-width:640px) 100vw, 768px"
-          className={hero.includes("otolon_face") ? "object-contain" : "object-cover"}
+          className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
         />
       </div>
 

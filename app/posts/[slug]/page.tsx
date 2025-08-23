@@ -102,7 +102,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 fill
                 priority={false}
                 sizes="(max-width:640px) 100vw, 768px"
-                className={hero.includes("otolon_face") ? "object-contain" : "object-cover"}
+                className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
               />
             </div>
           </header>
