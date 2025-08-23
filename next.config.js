@@ -2,8 +2,7 @@
 const nextConfig = {
   async rewrites() {
     return [
-     { source: "/blog", destination: "/" },
-     { source: "/blog/:path*", destination: "/:path*" },
+      { source: "/blog/posts/:path*", destination: "/posts/:path*" },
     ];
   },
 };
