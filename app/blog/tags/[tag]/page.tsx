@@ -3,6 +3,7 @@ import { getAllPostsMeta } from "@/lib/posts";
 
 export const revalidate = 300; // ISR 任意
 export const dynamic = "force-static"; // 任意
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const posts = await getAllPostsMeta();
@@ -22,7 +23,9 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       <ul>
         {posts.map((p) => (
           <li key={p.slug}>
-            <a href={`/blog/posts/${p.slug}`}>{p.title}</a>
+            <a href={`/blog/posts/${p.slug}`} className="link-plain">
+              {p.title}
+            </a>
           </li>
         ))}
       </ul>

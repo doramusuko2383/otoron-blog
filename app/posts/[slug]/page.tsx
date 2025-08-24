@@ -9,6 +9,7 @@ import {
 } from "@/lib/posts";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
+import TagChip from "@/components/TagChip";
 
 const BASE =
   process.env.NEXT_PUBLIC_SITE_URL || "https://otoron-blog.vercel.app";
@@ -133,9 +134,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               <ul className="mt-3 flex flex-wrap gap-2">
                 {post.tags.map((t: string) => (
                   <li key={t}>
-                    <a href={`/blog/tags/${encodeURIComponent(t)}`} className="tag-chip">
-                      {t}
-                    </a>
+                    <TagChip tag={t} />
                   </li>
                 ))}
               </ul>
