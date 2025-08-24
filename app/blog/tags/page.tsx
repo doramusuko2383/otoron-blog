@@ -12,7 +12,7 @@ export default async function TagsPage() {
         {tags.map((t) => (
           <li key={t.slug}>
             <TagChip tag={t.name}>
-              <span className="ml-1 text-gray-400">({t.count})</span>
+              <span>({t.count})</span>
             </TagChip>
           </li>
         ))}

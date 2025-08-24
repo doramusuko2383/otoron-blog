@@ -312,11 +312,11 @@ a:hover { text-decoration:underline; }
 .container{ max-width:1040px; margin:0 auto; padding:24px 20px 80px; }
 
 /* ヘッダー／フッター */
-.mast{ position:sticky; top:0; background:rgba(255,255,255,.85); backdrop-filter:blur(8px);
+.site-header{ position:sticky; top:0; background:rgba(255,255,255,.85); backdrop-filter:blur(8px);
        border-bottom:1px solid #eee; z-index:50; }
-.mast .container{ display:flex; gap:20px; align-items:center; padding-block:16px; }
-.mast .brand{ font-weight:700; letter-spacing:.02em; }
-.mast nav{ margin-left:auto; display:flex; gap:18px; }
+.site-header .container{ display:flex; gap:20px; align-items:center; padding-block:16px; }
+.site-header .brand{ font-weight:700; letter-spacing:.02em; }
+.site-header nav{ margin-left:auto; display:flex; gap:18px; }
 
 footer.foot{ border-top:1px solid #eee; color:var(--muted); }
 
@@ -502,6 +502,36 @@ article h2, article h3 { scroll-margin-top: 96px; }
 .link-plain:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* ヘッダー内リンク（左上「オトロン」含む） */
+.site-header a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-header a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* タグを“青文字”ではなくチップ表示に */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem; /* py-0.5 px-2 */
+  font-size: 0.875rem; /* text-sm */
+  color: rgb(55 65 81); /* text-gray-700 */
+  background-color: rgb(243 244 246); /* bg-gray-100 */
+  text-decoration: none;
+}
+.tag-chip:hover {
+  text-decoration: underline;
+  background-color: rgb(229 231 235); /* hover:bg-gray-200 */
+}
+.tag-chip span {
+  margin-left: 0.25rem;
+  color: rgb(156 163 175); /* text-gray-400 */
 }
 
 
