@@ -1,96 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+type Heading = { depth: number; text: string; id: string };
 
-type Heading = { id: string; text: string; depth: number };
-
-function createSlugger() {
-  const counts = new Map<string, number>();
-  return (value: string) => {
-    let slug = value
-      .normalize('NFKD')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[!"#$%&'()*+,./:;<=>?@[\\]^`{|}~]/g, '');
-    const count = counts.get(slug) || 0;
-    counts.set(slug, count + 1);
-    return count ? `${slug}-${count}` : slug;
+export default function TableOfContents({ headings }: { headings: Heading[] }) {
+  const handleClick = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${encodeURIComponent(id)}`);
   };
-}
-
-export default function TableOfContents({ headings = [] as Heading[] }) {
-  const [items, setItems] = useState<Heading[]>(headings);
-
-  useEffect(() => {
-    // 1) props に既に見出しがあるならそれを使う
-    if (headings.length > 0) {
-      setItems(headings);
-      return;
-    }
-    // 2) 本文 (#post-body) から h2/h3 を抽出
-    const root = document.querySelector('#post-body');
-    if (!root) return;
-
-    let hs: Heading[] = [];
-    const hNodes = Array.from(root.querySelectorAll('h2, h3')) as HTMLElement[];
-    if (hNodes.length) {
-      const slug = createSlugger();
-      hs = hNodes.map((el) => {
-        const text = (el.textContent || '').trim();
-        const id = el.id || slug(text);
-        el.id = id;
-        return { id, text, depth: el.tagName === 'H3' ? 3 : 2 };
-      });
-    } else {
-      // 3) 見出しが無ければ、直下のリスト項目から擬似TOCを作成（最大5件）
-      const lis = Array.from(
-        root.querySelectorAll(':scope > ol > li, :scope > ul > li')
-      ) as HTMLElement[];
-      hs = lis.slice(0, 5).map((li, i) => {
-        const text = (li.textContent || '').trim();
-        const id = li.id || `sec-${i + 1}`;
-        li.id = id; // アンカーを付与
-        return { id, text, depth: 2 };
-      });
-    }
-    setItems(hs);
-  }, [headings]);
-
-  // 現在位置ハイライト（軽量）
-  const [active, setActive] = useState('');
-  useEffect(() => {
-    const root = document.querySelector('#post-body');
-    if (!root) return;
-    const targets = Array.from(root.querySelectorAll('h2, h3, :scope > ol > li, :scope > ul > li'));
-    if (!targets.length) return;
-    const io = new IntersectionObserver(
-      (ents) => {
-        const top = ents
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (a.target as HTMLElement).offsetTop - (b.target as HTMLElement).offsetTop)[0];
-        if (top) setActive((top.target as HTMLElement).id);
-      },
-      { rootMargin: '-96px 0px -70% 0px', threshold: [0, 1] }
-    );
-    targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
-  }, []);
-
-  // 何も作れなければ描画しない（右サイドは CSS で自動非表示）
-  if (!items.length) return null;
 
   return (
-    <nav aria-label="目次" className="toc">
-      <ol>
-        {items.map((h) => (
-          <li key={h.id} className={h.depth === 3 ? 'toc-li toc-li--lvl3' : 'toc-li'}>
-            <a href={`#${h.id}`} className={`toc-link ${active === h.id ? 'is-active' : ''}`}>
+    <nav aria-label="目次">
+      <ul className="space-y-1 text-sm">
+        {headings.map((h) => (
+          <li key={h.id} className={`pl-${(h.depth - 1) * 3}`}>
+            {/* Next.js の <Link> は使わず、素の <a> に onClick */}
+            <a
+              href={`#${h.id}`}
+              onClick={handleClick(h.id)}
+              className="hover:underline"
+            >
               {h.text}
             </a>
           </li>
         ))}
-      </ol>
+      </ul>
     </nav>
   );
 }
+
