@@ -27,7 +27,7 @@ declare module "@/lib/posts" {
   export function getPostBySlug(slug: string): Promise<
     (BlogPost & {
       html: string;
-      headings: { depth: number; text: string; id: string }[];
+      headings: { level: number; title: string; id: string }[];
     }) | null
   >;
   export function getAdjacentPosts(slug: string): Promise<{
