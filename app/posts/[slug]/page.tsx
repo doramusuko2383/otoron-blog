@@ -94,16 +94,22 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 py-8">
+        {hasTOC && (
+          <details className="md:hidden toc-mobile mb-6">
+            <summary>目次</summary>
+            <TableOfContents headings={post.headings} />
+          </details>
+        )}
         <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
-          {/* ▼ デスクトップ用（本文より前に配置） */}
           {hasTOC && (
-            <aside className="hidden md:block md:col-span-4 toc-aside order-first">
-              <TableOfContents headings={post.headings} />
+            <aside className="hidden md:block md:col-span-4 order-first">
+              <div className="toc-box">
+                <TableOfContents headings={post.headings} />
+              </div>
             </aside>
           )}
 
-          {/* 本文（8カラム） */}
-          <article className="md:col-span-8">
+          <article className="md:col-span-8 prose prose-blue max-w-none">
             <header className="mb-6">
               <h1 className="text-2xl font-bold">{post.title}</h1>
               <time className="mt-2 block text-sm text-gray-500">
@@ -123,12 +129,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 </div>
               )}
             </header>
-            {hasTOC && (
-              <details className="md:hidden toc-mobile mb-4">
-                <summary className="toc-title">目次</summary>
-                <TableOfContents headings={post.headings} />
-              </details>
-            )}
 
             {post.tags?.length > 0 && (
               <ul className="mt-3 flex flex-wrap gap-2">
@@ -142,55 +142,50 @@ export default async function PostPage({ params }: { params: { slug: string } })
               </ul>
             )}
 
-          {/* 本文は .prose 内だけ */}
-          <div className="prose prose-blue max-w-none">
             <div dangerouslySetInnerHTML={{ __html: post.html }} />
-          </div>
 
-          {/* 前後記事 …（既存のまま） */}
-          <nav className="mt-10 flex justify-between text-sm">
-            <div>
-              {prev && (
-                <a href={`/blog/posts/${prev.slug}`} className="underline">
-                  ← {prev.title}
-                </a>
-              )}
-            </div>
-            <div>
-              {next && (
-                <a href={`/blog/posts/${next.slug}`} className="underline">
-                  {next.title} →
-                </a>
-              )}
-            </div>
-          </nav>
-
-          {/* 関連記事 */}
-          {related?.length > 0 && (
-            <section aria-labelledby="related" className="mt-12">
-              <h2 id="related" className="text-lg font-semibold">関連記事</h2>
-              <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {related.map((p: any) => (
-                  <PostCard
-                    key={p.slug}
-                    slug={p.slug}
-                    title={p.title}
-                    description={p.description}
-                    date={p.date}
-                    thumb={p.thumb}
-                  />
-                ))}
+            <nav className="mt-10 flex justify-between text-sm">
+              <div>
+                {prev && (
+                  <a href={`/blog/posts/${prev.slug}`} className="underline">
+                    ← {prev.title}
+                  </a>
+                )}
               </div>
-            </section>
-          )}
-        </article>
-      </div>
-    </main>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
-    />
-    <script
+              <div>
+                {next && (
+                  <a href={`/blog/posts/${next.slug}`} className="underline">
+                    {next.title} →
+                  </a>
+                )}
+              </div>
+            </nav>
+
+            {related?.length > 0 && (
+              <section aria-labelledby="related" className="mt-12">
+                <h2 id="related" className="text-lg font-semibold">関連記事</h2>
+                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  {related.map((p: any) => (
+                    <PostCard
+                      key={p.slug}
+                      slug={p.slug}
+                      title={p.title}
+                      description={p.description}
+                      date={p.date}
+                      thumb={p.thumb}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+          </article>
+        </div>
+      </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
+      <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
     />

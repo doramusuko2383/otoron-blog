@@ -4,8 +4,19 @@ import { useEffect, useState } from 'react';
 
 type Heading = { id: string; text: string; depth: number };
 
-function slugify(s: string) {
-  return s.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
+function createSlugger() {
+  const counts = new Map<string, number>();
+  return (value: string) => {
+    let slug = value
+      .normalize('NFKD')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[!"#$%&'()*+,./:;<=>?@[\\]^`{|}~]/g, '');
+    const count = counts.get(slug) || 0;
+    counts.set(slug, count + 1);
+    return count ? `${slug}-${count}` : slug;
+  };
 }
 
 export default function TableOfContents({ headings = [] as Heading[] }) {
@@ -24,10 +35,12 @@ export default function TableOfContents({ headings = [] as Heading[] }) {
     let hs: Heading[] = [];
     const hNodes = Array.from(root.querySelectorAll('h2, h3')) as HTMLElement[];
     if (hNodes.length) {
+      const slug = createSlugger();
       hs = hNodes.map((el) => {
         const text = (el.textContent || '').trim();
-        if (!el.id) el.id = slugify(text);
-        return { id: el.id, text, depth: el.tagName === 'H3' ? 3 : 2 };
+        const id = el.id || slug(text);
+        el.id = id;
+        return { id, text, depth: el.tagName === 'H3' ? 3 : 2 };
       });
     } else {
       // 3) 見出しが無ければ、直下のリスト項目から擬似TOCを作成（最大5件）
