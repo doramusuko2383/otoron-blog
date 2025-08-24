@@ -84,6 +84,10 @@ html {
   display: block;
   margin: 0 0 1rem;
 }
+.toc-mobile > summary {
+  cursor: pointer;
+  font-weight: 700;
+}
 .toc-details {
   border: 1px solid rgba(0,0,0,.08);
   border-radius: .5rem;
@@ -173,6 +177,19 @@ main { padding-top: 24px; }
 .toc-aside nav.toc { font-size: 14px; }
 .toc-aside a { color: var(--brand); text-decoration: none; }
 .toc-aside a:hover { text-decoration: underline; }
+
+/* 目次ボックス（サイド）のベース */
+.toc-box {
+  position: sticky;
+  top: 96px;                /* ヘッダー高さに合わせて調整 */
+  z-index: 10;
+  background: var(--bg, #fff);
+  border: 1px solid #e5e7eb; /* #eee でも可 */
+  border-radius: 12px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  padding: 12px;
+}
 
 /* ==== Blog minimal refresh (SEO-first) ==== */
 :root{
