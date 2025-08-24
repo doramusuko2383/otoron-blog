@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja">
       <body>
-        <header className="mast">
+        <header className="site-header">
           <div className="container">
             <a className="brand link-plain" href="/">オトロン</a>
             <nav>
