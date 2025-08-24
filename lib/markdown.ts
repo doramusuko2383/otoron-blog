@@ -109,11 +109,7 @@ export async function renderMarkdown(
     .use(rehypeSlug)
     .use(collectToc) // ← 先に見出しを収集（rehypeSlug 後）
     .use(rehypeAutolinkHeadings, {
-      behavior: "append",
-      content: {
-        type: "text",
-        value: " #",
-      },
+      behavior: "wrap",
     })
     .use(rehypeExternalLinks)
     .use(rehypeSanitize, schema as any)

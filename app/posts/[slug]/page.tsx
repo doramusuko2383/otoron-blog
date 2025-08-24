@@ -58,7 +58,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   const { prev, next }: any = await getAdjacentPosts(post.slug);
   const related = await getRelatedPosts(post.slug, 2);
-  const hero = post.thumb || post.ogImage || "/otolon_face.webp";
+  const hero = post.thumb ?? null;
   const canonical = `${BASE}/blog/posts/${post.slug}`;
   const ogImageAbs = `${BASE}${post.ogImage || "/ogp.png"}`;
 
@@ -95,6 +95,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
     <>
       <main className="mx-auto max-w-5xl px-4 py-8">
         <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
+          {/* ▼ デスクトップ用（本文より前に配置） */}
+          {hasTOC && (
+            <aside className="hidden md:block md:col-span-4 toc-aside order-first">
+              <TableOfContents headings={post.headings} />
+            </aside>
+          )}
+
           {/* 本文（8カラム） */}
           <article className="md:col-span-8">
             <header className="mb-6">
@@ -103,30 +110,37 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 {new Date(post.date).toLocaleDateString("ja-JP")}
               </time>
 
-              {/* ←親に 16/9 の“枠”＋最大幅を与えて画像を収める */}
-              <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-                <Image
-                  src={hero}
-                  alt={post.title}
-                  fill
-                  priority={false}
-                  sizes="(max-width:640px) 100vw, 768px"
-                  className={`${hero.includes("otolon_face") ? "object-contain" : "object-cover"} img-reset`}
-                />
-              </div>
+              {hero && (
+                <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
+                  <Image
+                    src={hero}
+                    alt={post.title}
+                    fill
+                    priority={false}
+                    sizes="(max-width:640px) 100vw, 768px"
+                    className="object-cover img-reset"
+                  />
+                </div>
+              )}
             </header>
+            {hasTOC && (
+              <details className="md:hidden toc-mobile mb-4">
+                <summary className="toc-title">目次</summary>
+                <TableOfContents headings={post.headings} />
+              </details>
+            )}
 
-          {post.tags?.length > 0 && (
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {post.tags.map((t: string) => (
-                <li key={t}>
-                  <a href={`/blog/tags/${tagSlug(t)}`} className="tag-chip">
-                    {t}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+            {post.tags?.length > 0 && (
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {post.tags.map((t: string) => (
+                  <li key={t}>
+                    <a href={`/blog/tags/${tagSlug(t)}`} className="tag-chip">
+                      {t}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
 
           {/* 本文は .prose 内だけ */}
           <div className="prose prose-blue max-w-none">
@@ -169,22 +183,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               </div>
             </section>
           )}
-
-          {/* モバイル TOC（本文に見出しが無い場合は非表示） */}
-          {hasTOC && (
-            <details className="md:hidden toc-mobile mt-10">
-              <summary className="toc-mobile-summary">目次</summary>
-              <TableOfContents headings={post.headings} />
-            </details>
-          )}
         </article>
-
-        {/* ▼ デスクトップ用 */}
-        <aside className="hidden md:block md:col-span-4">
-          <div className="sticky top-24 toc-aside">
-            <TableOfContents headings={post.headings} />
-          </div>
-        </aside>
       </div>
     </main>
     <script
