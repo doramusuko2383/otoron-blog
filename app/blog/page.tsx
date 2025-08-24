@@ -40,7 +40,7 @@ export default async function BlogTopPage() {
       {totalPages > 1 && (
         <nav className="mt-10 flex items-center justify-between">
           <span />
-          <Link className="underline" href="/blog/page/2">次のページ →</Link>
+          <Link className="link-plain" href="/blog/page/2">次のページ →</Link>
         </nav>
       )}
     </main>
