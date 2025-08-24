@@ -7,8 +7,6 @@ img, picture, video, canvas, svg { max-width: 100%; height: auto; }
 
 /* prose(typography) 使用時も高さが固定化されないように */
 .prose img { height: auto; }
-a,.brand{color:var(--brand);text-decoration:none}
-a:hover{text-decoration:underline;text-decoration-color:var(--brand-600)}
 a:focus-visible{outline:2px solid var(--brand-600);outline-offset:2px}
 .container{max-width:920px;margin-inline:auto;padding:24px}
 .hero{font-size:40px;font-weight:900;letter-spacing:.01em;margin:8px 0 4px}
@@ -20,15 +18,6 @@ a:focus-visible{outline:2px solid var(--brand-600);outline-offset:2px}
 .post img{max-width:100%;height:auto;border-radius:12px}
 hr{border:none;border-top:1px solid #eee;margin:28px 0}
 kbd{background:#f6f6f6;border:1px solid #e4e4e7;border-bottom-width:2px;border-radius:6px;padding:0 6px;font-family:ui-monospace,Menlo,Consolas,monospace}
-.toc{border:1px solid #eee;padding:12px;margin:16px 0;border-radius:8px;background:#fafafa}
-.toc-title{font-weight:700;margin-bottom:8px}
-.toc ul{list-style:none;padding-left:0;margin:0}
-.toc li{margin:4px 0}
-.toc li.d2{margin-left:0}
-.toc li.d3{margin-left:16px}
-/* rehype-autolink-headings が追加するアンカーを非表示 */
-.prose .anchor { display: none; }
-
 /* 念のため：見出し内の <a> があっても色を継承・下線なし */
 .prose h1 a, .prose h2 a, .prose h3 a, .prose h4 a {
   color: inherit;
@@ -543,3 +532,27 @@ article h2, article h3 { scroll-margin-top: 96px; }
   color: transparent; /* 既存の透明はそのまま */
 }
 
+/* すべてのアンカーのデフォルトを落ち着かせる */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--brand, #2563eb);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 記事本文（.prose）内の見出しへスクロール位置の余白（固定ヘッダー対策） */
+.prose :is(h1, h2, h3, h4).anchor-target {
+  scroll-margin-top: 96px;
+}
+
+/* 目次の見た目（必要に応じて） */
+.toc ul { list-style: none; padding-left: 0; margin: 0; }
+.toc li { margin: 4px 0; }
+.toc li.lvl-2 { margin-left: 12px; }
+.toc li.lvl-3 { margin-left: 24px; }
+.toc a { color: inherit; text-decoration: none; }
+.toc a:hover { color: var(--brand, #2563eb); text-decoration: underline; }
+.brand { color: var(--brand); }

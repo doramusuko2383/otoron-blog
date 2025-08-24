@@ -1,28 +1,24 @@
 'use client';
 
-type Heading = { depth: number; text: string; id: string };
+type TocItem = { level: number; title: string; id: string };
 
-export default function TableOfContents({ headings }: { headings: Heading[] }) {
-  const handleClick = (id: string) => (e: React.MouseEvent) => {
+export default function TableOfContents({ headings }: { headings: TocItem[] }) {
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    history.replaceState(null, '', `#${encodeURIComponent(id)}`);
+    const el = document.getElementById(decodeURIComponent(id));
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', `#${id}`);
+    }
   };
 
   return (
-    <nav aria-label="目次">
-      <ul className="space-y-1 text-sm">
+    <nav aria-label="目次" className="toc">
+      <ul>
         {headings.map((h) => (
-          <li key={h.id} className={`pl-${(h.depth - 1) * 3}`}>
-            {/* Next.js の <Link> は使わず、素の <a> に onClick */}
-            <a
-              href={`#${h.id}`}
-              onClick={handleClick(h.id)}
-              className="hover:underline"
-            >
-              {h.text}
+          <li key={h.id} className={`lvl-${h.level}`}>
+            <a href={`#${h.id}`} onClick={(e) => onClick(e, h.id)}>
+              {h.title}
             </a>
           </li>
         ))}

@@ -4,14 +4,25 @@ import remarkGfm from "remark-gfm";
 import remarkSmartypants from "remark-smartypants";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { visit } from "unist-util-visit";
 import { toString } from "mdast-util-to-string";
-import GithubSlugger from "github-slugger";
 
-export type Heading = { depth: number; text: string; id: string };
+export type Heading = { level: number; title: string; id: string };
+
+export function slugify(raw: string): string {
+  const base = raw.trim().replace(/\s+/g, "-");
+  return encodeURIComponent(base);
+}
+
+export function addHeadingIds(html: string): string {
+  return html.replace(/<h([1-4])([^>]*)>([\s\S]*?)<\/h\1>/g, (_m, lvl, attrs, inner) => {
+    if (/\sid=/.test(attrs)) return `<h${lvl}${attrs}>${inner}</h${lvl}>`;
+    const text = inner.replace(/<[^>]+>/g, "").trim();
+    const id = slugify(text);
+    return `<h${lvl}${attrs} id="${id}" class="anchor-target">${inner}</h${lvl}>`;
+  });
+}
 
 function rehypeExternalLinks() {
   return (tree: any) => {
@@ -62,39 +73,26 @@ const schema = {
 };
 
 export async function parseMarkdown(md: string) {
-  // 1) 見出し一覧（目次用）を抽出し、GitHubSluggerでidを作る
   const mdast = unified().use(remarkParse).use(remarkGfm).parse(md);
 
-  const slugger = new GithubSlugger();
   const headings: Heading[] = [];
   visit(mdast, "heading", (node: any) => {
-    const text = toString(node);
-    const id = slugger.slug(text);
-    headings.push({ depth: node.depth, text, id });
+    const title = toString(node);
+    const id = slugify(title);
+    headings.push({ level: node.depth, title, id });
   });
 
-  // 2) HTML 生成（本文側の見出しにもidを付ける）
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkSmartypants)
     .use(remarkRehype)
-    .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings, {
-      behavior: "append",
-      content: {
-        type: "element",
-        tagName: "span",
-        properties: { className: ["anchor"] },
-        children: [{ type: "text", value: "" }],
-      },
-    })
     .use(rehypeExternalLinks)
     .use(rehypeSanitize, schema as any)
     .use(rehypeStringify)
     .process(md);
 
-  const html = String(file);
+  const html = addHeadingIds(String(file));
   return { html, headings };
 }
 
