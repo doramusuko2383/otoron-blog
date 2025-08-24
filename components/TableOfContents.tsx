@@ -2,12 +2,18 @@
 
 type TocItem = { level: number; title: string; id: string };
 
+const HEADER_OFFSET = 96; // ヘッダーの高さに合わせて調整
+
 export default function TableOfContents({ headings }: { headings: TocItem[] }) {
-  const onClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string
+  ) => {
     e.preventDefault();
-    const el = document.getElementById(decodeURIComponent(id));
+    const el = document.getElementById(id); // decode しない
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const y = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+      window.scrollTo({ top: y, behavior: 'smooth' });
       history.replaceState(null, '', `#${id}`);
     }
   };
@@ -17,7 +23,7 @@ export default function TableOfContents({ headings }: { headings: TocItem[] }) {
       <ul>
         {headings.map((h) => (
           <li key={h.id} className={`lvl-${h.level}`}>
-            <a href={`#${h.id}`} onClick={(e) => onClick(e, h.id)}>
+            <a href={`#${h.id}`} onClick={(e) => handleClick(e, h.id)}>
               {h.title}
             </a>
           </li>

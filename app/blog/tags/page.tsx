@@ -12,7 +12,7 @@ export default async function TagsPage() {
         {tags.map(t => (
           <li key={t.slug}>
             <Link
-              href={`/blog/tags/${t.slug}`}
+              href={`/blog/tags/${encodeURIComponent(t.name)}`}
               className="inline-block rounded-full border px-3 py-1 text-sm hover:bg-gray-50"
             >
               {t.name} <span className="text-gray-400">({t.count})</span>
