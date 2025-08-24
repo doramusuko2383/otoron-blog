@@ -6,7 +6,7 @@ export default function Breadcrumb({ items }: { items: Crumb[] }) {
       {items.map((c, i) => (
         <span key={i}>
           {c.href ? (
-            <a href={c.href} className="brand">{c.label}</a>
+            <a href={c.href} className="brand link-plain">{c.label}</a>
           ) : (
             <span className="current">{c.label}</span>
           )}

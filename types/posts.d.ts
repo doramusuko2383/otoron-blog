@@ -8,7 +8,7 @@ declare module "@/lib/posts" {
     ogImage?: string;
     thumb?: string;
     featured?: boolean;
-    tags?: string[];
+    tags: string[];
     draft?: boolean;
     readingMinutes?: number;
   };

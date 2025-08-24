@@ -145,14 +145,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
             <nav className="mt-10 flex justify-between text-sm">
               <div>
                 {prev && (
-                  <a href={`/blog/posts/${prev.slug}`} className="underline">
+                  <a href={`/blog/posts/${prev.slug}`} className="link-plain">
                     ← {prev.title}
                   </a>
                 )}
               </div>
               <div>
                 {next && (
-                  <a href={`/blog/posts/${next.slug}`} className="underline">
+                  <a href={`/blog/posts/${next.slug}`} className="link-plain">
                     {next.title} →
                   </a>
                 )}

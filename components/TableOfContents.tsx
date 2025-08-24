@@ -23,7 +23,11 @@ export default function TableOfContents({ headings }: { headings: TocItem[] }) {
       <ul>
         {headings.map((h) => (
           <li key={h.id} className={`lvl-${h.level}`}>
-            <a href={`#${h.id}`} onClick={(e) => handleClick(e, h.id)}>
+            <a
+              href={`#${h.id}`}
+              onClick={(e) => handleClick(e, h.id)}
+              className="link-plain"
+            >
               {h.title}
             </a>
           </li>

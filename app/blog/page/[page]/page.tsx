@@ -40,11 +40,11 @@ export default async function BlogPagedPage({ params }: { params: { page: string
       </div>
 
       <nav className="mt-10 flex items-center justify-between">
-        <Link className="underline" href={pageNum === 2 ? '/blog' : `/blog/page/${pageNum - 1}`}>
+        <Link className="link-plain" href={pageNum === 2 ? '/blog' : `/blog/page/${pageNum - 1}`}>
           ← 前のページ
         </Link>
         {pageNum < totalPages
-          ? <Link className="underline" href={`/blog/page/${pageNum + 1}`}>次のページ →</Link>
+          ? <Link className="link-plain" href={`/blog/page/${pageNum + 1}`}>次のページ →</Link>
           : <span />
         }
       </nav>

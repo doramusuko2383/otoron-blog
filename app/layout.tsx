@@ -18,10 +18,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <header className="mast">
           <div className="container">
-            <a className="brand" href="/">オトロン</a>
+            <a className="brand link-plain" href="/">オトロン</a>
             <nav>
-              <a href="/blog">記事一覧</a>
-              <a href="https://playotoron.com">公式サイト</a>
+              <a href="/blog" className="link-plain">記事一覧</a>
+              <a href="https://playotoron.com" className="link-plain">公式サイト</a>
             </nav>
           </div>
         </header>
