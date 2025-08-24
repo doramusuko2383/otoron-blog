@@ -8,47 +8,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { visit } from "unist-util-visit";
+import { toString } from "mdast-util-to-string";
+import GithubSlugger from "github-slugger";
 
-// 見出しから簡易TOCを作るプラグイン（h2/h3）
-function collectToc() {
-  return (tree: any, file: any) => {
-    const headings: { depth: number; id: string; text: string }[] = [];
-    const visit = (node: any) => {
-      if (node.type === "element" && /^h[2-3]$/.test(node.tagName)) {
-        const id = node.properties?.id || "";
-        const text = (node.children || [])
-          .filter((c: any) => c.type === "text")
-          .map((c: any) => c.value)
-          .join("");
-        const depth = Number(node.tagName.slice(1));
-        if (id && text) headings.push({ depth, id, text });
-      }
-      (node.children || []).forEach(visit);
-    };
-    visit(tree);
-
-    if (!headings.length) {
-      file.data.toc = null;
-      file.data.headings = [];
-      return;
-    }
-
-    // h2 をトップ、h3 をサブとして UL を組む
-    let html = '<nav class="toc"><ul>';
-    for (let i = 0; i < headings.length; i++) {
-      const h = headings[i];
-      if (h.depth === 2) {
-        if (i !== 0) html += "</ul></li>";
-        html += `<li><a href="#${h.id}">${h.text}</a><ul>`;
-      } else {
-        html += `<li><a href="#${h.id}">${h.text}</a></li>`;
-      }
-    }
-    html += "</ul></li></ul></nav>";
-    file.data.toc = html;
-    file.data.headings = headings;
-  };
-}
+export type Heading = { depth: number; text: string; id: string };
 
 function rehypeExternalLinks() {
   return (tree: any) => {
@@ -98,29 +61,42 @@ const schema = {
   ],
 };
 
-export async function renderMarkdown(
-  md: string
-): Promise<{ html: string; toc: string | null; headings: { depth: number; id: string; text: string }[] }> {
+export async function parseMarkdown(md: string) {
+  // 1) 見出し一覧（目次用）を抽出し、GitHubSluggerでidを作る
+  const mdast = unified().use(remarkParse).use(remarkGfm).parse(md);
+
+  const slugger = new GithubSlugger();
+  const headings: Heading[] = [];
+  visit(mdast, "heading", (node: any) => {
+    const text = toString(node);
+    const id = slugger.slug(text);
+    headings.push({ depth: node.depth, text, id });
+  });
+
+  // 2) HTML 生成（本文側の見出しにもidを付ける）
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkSmartypants)
-    .use(remarkRehype, { allowDangerousHtml: false })
+    .use(remarkRehype)
     .use(rehypeSlug)
-    .use(collectToc) // ← 先に見出しを収集（rehypeSlug 後）
     .use(rehypeAutolinkHeadings, {
-      behavior: "wrap",
+      behavior: "append",
+      content: {
+        type: "element",
+        tagName: "span",
+        properties: { className: ["anchor"] },
+        children: [{ type: "text", value: "" }],
+      },
     })
     .use(rehypeExternalLinks)
     .use(rehypeSanitize, schema as any)
     .use(rehypeStringify)
     .process(md);
 
-  return {
-    html: String(file),
-    toc: (file.data as any).toc ?? null,
-    headings: (file.data as any).headings ?? [],
-  };
+  const html = String(file);
+  return { html, headings };
 }
 
 export { rehypeExternalLinks };
+
