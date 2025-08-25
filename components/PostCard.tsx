@@ -12,7 +12,7 @@ export default function PostCard({ slug, title, description, date, thumb }: Card
   return (
     <a
       href={`/blog/posts/${slug}`}
-      className="group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
+      className="link-plain group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
     >
       <div className="relative w-full overflow-hidden rounded-t-2xl bg-gray-50 aspect-[16/9] max-h-44 sm:max-h-52">
         {thumb ? (
