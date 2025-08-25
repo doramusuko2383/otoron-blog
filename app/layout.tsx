@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja">
-      <body>
-        <header className="site-header">
+      <body className="bg-page">
+        <header className="site-header sticky top-0 z-50 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
           <div className="container">
             <a className="brand link-plain" href="/">オトロン</a>
             <nav>
@@ -25,8 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </nav>
           </div>
         </header>
-
-        <main className="container">{children}</main>
+        {children}
 
         <footer className="foot">
           <div className="container">© {new Date().getFullYear()} OTORON</div>

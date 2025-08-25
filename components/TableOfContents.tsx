@@ -19,7 +19,7 @@ export default function TableOfContents({ headings }: { headings: TocItem[] }) {
   };
 
   return (
-    <nav aria-label="目次" className="toc">
+    <nav aria-label="目次" className="toc z-40">
       <ul>
         {headings.map((h) => (
           <li key={h.id} className={`lvl-${h.level}`}>
