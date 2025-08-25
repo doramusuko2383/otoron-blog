@@ -7,13 +7,13 @@ export default function PostCard({ post }: { post: any }) {
   return (
     <article className="card overflow-hidden">
       <a href={href} className="block">
-        {/* 16:9 / 高さ 約180〜200px 相当 */}
+        {/* 16:9 固定。カード幅に応じて自動で小さくなる */}
         <Image
           src={src}
           alt={post.title}
           width={640}
           height={360}
-          sizes="(max-width:640px) 100vw, (max-width:1024px) 33vw, 300px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 300px"
           className="w-full h-auto object-cover"
           priority={false}
         />

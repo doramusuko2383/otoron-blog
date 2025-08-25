@@ -4,11 +4,12 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:s
 /* 画像が親幅を超えて暴れないように */
 img, picture, video, canvas, svg { max-width: 100%; height: auto; }
 
-/* prose内の画像が親幅を超えないように */
-.prose img{max-width:100%;height:auto;border-radius:12px}
+/* prose 内の画像は親幅を超えない */
+.prose img{ max-width:100%; height:auto; border-radius:12px; }
 
+/* ほんのり背景（真っ白感を弱める） */
 .bg-page{
-  background-image: linear-gradient(to bottom, #fff 0%, #f8fafc 100%);
+  background-image: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
 }
 a:focus-visible{outline:2px solid var(--brand-600);outline-offset:2px}
 .container{max-width:920px;margin-inline:auto;padding:24px}
@@ -601,12 +602,12 @@ a:hover {
   --surface-weak:#f8fafc;   /* slate-50 */
 }
 
-/* 共通カード（一覧/本文） */
+/* 共通カード */
 .card{
-  background: var(--surface);
-  border: 1px solid rgba(15,23,42,.08);       /* slate-900/10 */
-  border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(15,23,42,.04);
+  background:#fff;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:16px;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
 }
 .card:hover{
   box-shadow: 0 6px 12px rgba(15,23,42,.06);
@@ -614,11 +615,10 @@ a:hover {
   transition: box-shadow .2s ease, transform .2s ease;
 }
 
-/* 見出しに細いアクセント下線 */
+/* 見出しアクセント（任意） */
 .heading-underline{
-  border-bottom: 3px solid var(--brand);
-  display: inline-block;
-  padding-bottom: .25rem;
+  border-bottom:3px solid var(--brand, #2563eb);
+  display:inline-block; padding-bottom:.25rem;
 }
 
 /* タグチップ */
