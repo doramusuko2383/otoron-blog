@@ -1,44 +1,38 @@
 import Image from "next/image";
 
-export type CardProps = {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  thumb?: string; // あれば使う。無ければ画像は出さない
-};
+export default function PostCard({ post }: { post: any }) {
+  const href = `/blog/posts/${post.slug}`;
+  const src = post.thumb ?? "/images/no-thumb.png";
 
-export default function PostCard({ slug, title, description, date, thumb }: CardProps) {
   return (
-    <a
-      href={`/blog/posts/${slug}`}
-      className="link-plain group block rounded-2xl border bg-white shadow-md transition hover:shadow-lg"
-    >
-      <div className="relative w-full overflow-hidden rounded-t-2xl bg-gray-50 aspect-[16/9] max-h-44 sm:max-h-52">
-        {thumb ? (
+    <article className="card overflow-hidden">
+      <a href={href} className="block">
+        <div className="relative w-full h-[180px] md:h-[200px]">
           <Image
-            alt={title}
-            src={thumb}
+            src={src}
+            alt={post.title}
             fill
-            sizes="(max-width:640px) 100vw, 384px"
-            className="object-cover img-reset"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 300px"
+            className="object-cover"
             priority={false}
           />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-400">
-            <span className="text-xs">No thumbnail</span>
+        </div>
+      </a>
+
+      <div className="p-4">
+        <a href={href} className="link-plain">
+          <h2 className="text-base md:text-lg font-semibold leading-snug line-clamp-2">{post.title}</h2>
+        </a>
+        <p className="mt-2 text-sm text-[color:var(--muted)] line-clamp-2">{post.description}</p>
+
+        {post.tags?.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {post.tags.slice(0,3).map((t: string) => (
+              <a key={t} href={`/blog/tags/${encodeURIComponent(t)}`} className="tag-chip">{t}</a>
+            ))}
           </div>
         )}
       </div>
-
-      {/* テキスト */}
-      <div className="p-4">
-        <div className="text-sm text-gray-400">
-          {new Date(date).toLocaleDateString("ja-JP")}
-        </div>
-        <h3 className="mt-1 line-clamp-2 text-base font-semibold leading-snug">{title}</h3>
-        <p className="mt-1 line-clamp-2 text-sm text-gray-600">{description}</p>
-      </div>
-    </a>
+    </article>
   );
 }

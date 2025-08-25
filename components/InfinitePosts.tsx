@@ -17,7 +17,7 @@ export default function InfinitePosts({
   initialOffset,
   total,
   pageSize,
-  gridClassName = 'mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2',
+  gridClassName = 'mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3',
 }: Props) {
   const [items, setItems] = useState<PostMeta[]>(initialItems);
   const [offset, setOffset] = useState(initialOffset);
@@ -64,14 +64,7 @@ export default function InfinitePosts({
     <>
       <div className={gridClassName}>
         {items.map(p => (
-          <PostCard
-            key={p.slug}
-            slug={p.slug}
-            title={p.title}
-            date={p.date}
-            description={p.description}
-            thumb={p.thumb}
-          />
+          <PostCard key={p.slug} post={p} />
         ))}
       </div>
 

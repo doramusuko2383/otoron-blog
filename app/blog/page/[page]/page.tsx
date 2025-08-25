@@ -23,32 +23,25 @@ export default async function BlogPagedPage({ params }: { params: { page: string
   if (items.length === 0) return notFound();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-12">
-      <h1 className="text-2xl font-bold mb-6">記事一覧（{pageNum} / {totalPages}）</h1>
+    <main className="bg-page">
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <h1 className="text-2xl font-bold text-[color:var(--ink)] heading-underline">記事一覧（{pageNum} / {totalPages}）</h1>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {items.map(p => (
-          <PostCard
-            key={p.slug}
-            slug={p.slug}
-            title={p.title}
-            date={p.date}
-            description={p.description}
-            thumb={p.thumb}
-          />
-        ))}
+        <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {items.map(p => (
+            <PostCard key={p.slug} post={p} />
+          ))}
+        </div>
+
+        <nav className="mt-10 flex items-center justify-between">
+          <Link className="link-plain" href={pageNum === 2 ? '/blog' : `/blog/page/${pageNum - 1}`}>← 前のページ</Link>
+          {pageNum < totalPages ? (
+            <Link className="link-plain" href={`/blog/page/${pageNum + 1}`}>次のページ →</Link>
+          ) : (
+            <span />
+          )}
+        </nav>
       </div>
-
-      <nav className="mt-10 flex items-center justify-between">
-        <Link className="link-plain" href={pageNum === 2 ? '/blog' : `/blog/page/${pageNum - 1}`}>
-          ← 前のページ
-        </Link>
-        {pageNum < totalPages
-          ? <Link className="link-plain" href={`/blog/page/${pageNum + 1}`}>次のページ →</Link>
-          : <span />
-        }
-      </nav>
     </main>
   );
 }
-
