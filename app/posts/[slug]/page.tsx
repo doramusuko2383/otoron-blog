@@ -89,94 +89,89 @@ export default async function PostPage({ params }: { params: { slug: string } })
   };
 
   const hasTOC =
-    Array.isArray(post.headings) && post.headings.length > 0; // 使わなくてもOK（残しても可）
+    Array.isArray(post.headings) && post.headings.length > 0;
 
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        {hasTOC && (
-          <details className="md:hidden toc-mobile mb-6">
-            <summary>目次</summary>
-            <TableOfContents headings={post.headings} />
-          </details>
-        )}
-        <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
+      <main className="bg-page">
+        <div className="mx-auto max-w-5xl px-4 py-8">
           {hasTOC && (
-            <aside className="hidden md:block md:col-span-4 order-first">
-              <div className="toc-box">
-                <TableOfContents headings={post.headings} />
-              </div>
-            </aside>
+            <details className="md:hidden toc-mobile mb-6">
+              <summary>目次</summary>
+              <TableOfContents headings={post.headings} />
+            </details>
           )}
-
-          <article className="md:col-span-8 prose prose-blue max-w-none">
-            <header className="mb-6">
-              <h1 className="text-2xl font-bold">{post.title}</h1>
-              <time className="mt-2 block text-sm text-gray-500">
-                {new Date(post.date).toLocaleDateString("ja-JP")}
-              </time>
-
-              {hero && (
-                <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-                  <Image
-                    src={hero}
-                    alt={post.title}
-                    fill
-                    priority={false}
-                    sizes="(max-width:640px) 100vw, 768px"
-                    className="object-cover img-reset"
-                  />
+          <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
+            {hasTOC && (
+              <aside className="hidden md:block md:col-span-4 order-first">
+                <div className="toc-box">
+                  <TableOfContents headings={post.headings} />
                 </div>
-              )}
-            </header>
-
-            {post.tags?.length > 0 && (
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {post.tags.map((t: string) => (
-                  <li key={t}>
-                    <TagChip tag={t} />
-                  </li>
-                ))}
-              </ul>
+              </aside>
             )}
 
-            <div dangerouslySetInnerHTML={{ __html: post.html }} />
+            <article className="md:col-span-8 card prose prose-neutral md:prose-lg max-w-none p-6">
+              <header className="mb-6">
+                <h1 className="text-2xl font-bold">{post.title}</h1>
+                <time className="mt-2 block text-sm text-[color:var(--muted)]">
+                  {new Date(post.date).toLocaleDateString("ja-JP")}
+                </time>
 
-            <nav className="mt-10 flex justify-between text-sm">
-              <div>
-                {prev && (
-                  <a href={`/blog/posts/${prev.slug}`} className="link-plain">
-                    ← {prev.title}
-                  </a>
-                )}
-              </div>
-              <div>
-                {next && (
-                  <a href={`/blog/posts/${next.slug}`} className="link-plain">
-                    {next.title} →
-                  </a>
-                )}
-              </div>
-            </nav>
-
-            {related?.length > 0 && (
-              <section aria-labelledby="related" className="mt-12">
-                <h2 id="related" className="text-lg font-semibold">関連記事</h2>
-                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  {related.map((p: any) => (
-                    <PostCard
-                      key={p.slug}
-                      slug={p.slug}
-                      title={p.title}
-                      description={p.description}
-                      date={p.date}
-                      thumb={p.thumb}
+                {hero && (
+                  <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
+                    <Image
+                      src={hero}
+                      alt={post.title}
+                      fill
+                      priority={false}
+                      sizes="(max-width:640px) 100vw, 768px"
+                      className="object-cover img-reset"
                     />
+                  </div>
+                )}
+              </header>
+
+              {post.tags?.length > 0 && (
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {post.tags.map((t: string) => (
+                    <li key={t}>
+                      <TagChip tag={t} />
+                    </li>
                   ))}
+                </ul>
+              )}
+
+              <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+              <nav className="mt-10 flex justify-between text-sm">
+                <div>
+                  {prev && (
+                    <a href={`/blog/posts/${prev.slug}`} className="link-plain">
+                      ← {prev.title}
+                    </a>
+                  )}
                 </div>
-              </section>
-            )}
-          </article>
+                <div>
+                  {next && (
+                    <a href={`/blog/posts/${next.slug}`} className="link-plain">
+                      {next.title} →
+                    </a>
+                  )}
+                </div>
+              </nav>
+
+              {related?.length > 0 && (
+                <section aria-labelledby="related" className="mt-12">
+                  <h2 id="related" className="text-lg font-semibold">関連記事</h2>
+                  <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    {related.map((p: any) => (
+                      <PostCard key={p.slug} post={p} />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </article>
+          </div>
         </div>
       </main>
       <script
@@ -184,10 +179,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
       <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-    />
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
     </>
   );
 }
-

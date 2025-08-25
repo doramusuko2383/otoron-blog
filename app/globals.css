@@ -603,3 +603,48 @@ a:hover {
 /* 一覧のタイトルを落ち着かせる */
 .post-list h2 a { color: inherit; text-decoration: none; }
 .post-list h2 a:hover { text-decoration: underline; }
+/* === Added minimal theme tokens and utilities === */
+:root{
+  --brand:#2563eb;          /* OTRON青 */
+  --ink:#111827;
+  --muted:#6b7280;
+  --surface:#ffffff;
+  --surface-weak:#f8fafc;   /* slate-50 */
+}
+
+/* ページの淡いグラデ背景 */
+.bg-page{
+  background-image: linear-gradient(to bottom, #ffffff 0%, var(--surface-weak) 100%);
+}
+
+/* 共通カード（一覧/本文） */
+.card{
+  background: var(--surface);
+  border: 1px solid rgba(15,23,42,.08);       /* slate-900/10 */
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04);
+}
+.card:hover{
+  box-shadow: 0 6px 12px rgba(15,23,42,.06);
+  transform: translateY(-1px);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+/* 見出しに細いアクセント下線 */
+.heading-underline{
+  border-bottom: 3px solid var(--brand);
+  display: inline-block;
+  padding-bottom: .25rem;
+}
+
+/* タグチップ */
+.tag-chip{
+  display:inline-flex;align-items:center;
+  border-radius:9999px;padding:.125rem .5rem;
+  font-size:.875rem;color:#374151;background:#f3f4f6;text-decoration:none;
+}
+.tag-chip:hover{ text-decoration:underline;background:#e5e7eb; }
+
+/* 表の横スクロール（スマホ可読性UP） */
+.prose table{ display:block;width:100%;overflow-x:auto; }
+.prose thead,.prose tbody,.prose tr{ width:max-content; }
