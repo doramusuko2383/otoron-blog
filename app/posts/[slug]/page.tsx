@@ -94,7 +94,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <main className="bg-page">
-        <div className="mx-auto max-w-5xl px-4 py-8">
+        <div className="mx-auto max-w-3xl px-4 py-10">
           {hasTOC && (
             <details className="md:hidden toc-mobile mb-6">
               <summary>目次</summary>
@@ -110,7 +110,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               </aside>
             )}
 
-            <article className="md:col-span-8 card prose prose-neutral md:prose-lg max-w-none p-6">
+            <article className="md:col-span-8 card prose prose-neutral md:prose-lg p-6">
               <header className="mb-6">
                 <h1 className="text-2xl font-bold">{post.title}</h1>
                 <time className="mt-2 block text-sm text-[color:var(--muted)]">
