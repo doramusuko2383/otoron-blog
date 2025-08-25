@@ -5,22 +5,22 @@ export default function PostCard({ post }: { post: any }) {
   const src = post.thumb ?? "/images/no-thumb.png";
 
   return (
-    <article className="card overflow-hidden flex flex-col">
+    <article className="card overflow-hidden">
       <a href={href} className="block">
-        {/* 高さを器で固定 → 画像はfillで中に収める（巨大化しない） */}
-        <div className="relative w-full h-[180px] md:h-[200px]">
+        {/* 16:9 の器 + 最大200pxでクランプ */}
+        <div className="relative aspect-[16/9] w-full max-h-[200px]">
           <Image
             src={src}
             alt={post.title}
             fill
-            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
             className="object-cover"
+            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
             priority={false}
           />
         </div>
       </a>
 
-      <div className="p-4 flex-1 flex flex-col">
+      <div className="p-4">
         <a href={href} className="link-plain">
           <h2 className="text-base md:text-lg font-semibold leading-snug line-clamp-2">
             {post.title}
