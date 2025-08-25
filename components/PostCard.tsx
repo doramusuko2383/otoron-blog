@@ -5,30 +5,35 @@ export default function PostCard({ post }: { post: any }) {
   const src = post.thumb ?? "/images/no-thumb.png";
 
   return (
-    <article className="card overflow-hidden">
+    <article className="card overflow-hidden flex flex-col">
       <a href={href} className="block">
-        {/* 16:9 固定。カード幅に応じて自動で小さくなる */}
-        <Image
-          src={src}
-          alt={post.title}
-          width={640}
-          height={360}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 300px"
-          className="w-full h-auto object-cover"
-          priority={false}
-        />
+        {/* 高さを器で固定 → 画像はfillで中に収める（巨大化しない） */}
+        <div className="relative w-full h-[180px] md:h-[200px]">
+          <Image
+            src={src}
+            alt={post.title}
+            fill
+            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
       </a>
 
-      <div className="p-4">
+      <div className="p-4 flex-1 flex flex-col">
         <a href={href} className="link-plain">
-          <h2 className="text-base md:text-lg font-semibold leading-snug line-clamp-2">{post.title}</h2>
+          <h2 className="text-base md:text-lg font-semibold leading-snug line-clamp-2">
+            {post.title}
+          </h2>
         </a>
         <p className="mt-2 text-sm text-gray-500 line-clamp-2">{post.description}</p>
 
         {post.tags?.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
-            {post.tags.slice(0,3).map((t:string)=> (
-              <a key={t} href={`/blog/tags/${encodeURIComponent(t)}`} className="tag-chip">{t}</a>
+            {post.tags.slice(0, 3).map((t: string) => (
+              <a key={t} href={`/blog/tags/${encodeURIComponent(t)}`} className="tag-chip">
+                {t}
+              </a>
             ))}
           </div>
         )}
