@@ -642,3 +642,17 @@ a:hover {
 
 /* .card に grid を当てていたら解除（幅バグの原因） */
 .card{ display:block; }
+
+/* 一覧カードのサムネ（高さ固定） */
+.post-card-thumb{
+  position: relative;
+  width: 100%;
+  height: 200px;              /* ←ここで固定 */
+  background: #f6f7fb;
+}
+.post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
+
+/* 取りこぼしがあっても絶対に200pxにするロック */
+.card > a:first-child { display:block !important; }
+.card > a:first-child .post-card-thumb { height:200px !important; }
+.card > a:first-child [data-nimg="fill"] { object-fit:cover !important; }
