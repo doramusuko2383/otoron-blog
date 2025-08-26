@@ -28,10 +28,7 @@ export default async function BlogPagedPage({ params }: { params: { page: string
         <h1 className="text-2xl font-bold text-[color:var(--ink)] heading-underline">記事一覧（{pageNum} / {totalPages}）</h1>
 
         {/* auto-fill + minmax で常に複数カラム化 */}
-        <div
-          className="mt-8 grid gap-8"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}
-        >
+        <div className="mt-8 posts-grid">
           {items.map(p => (
             <PostCard key={p.slug} post={p} />
           ))}
