@@ -5,10 +5,9 @@ export default function PostCard({ post }: { post: any }) {
   const src  = post.thumb ?? "/images/no-thumb.png";
 
   return (
-    <article className="card overflow-hidden">
+    <article className="card overflow-hidden block">  {/* display:block を明示 */}
       <a href={href} className="block">
-        {/* 高さ200pxの器に fill で収める → サムネは常に同じ高さ */}
-        <div className="post-card-thumb">
+        <div className="post-card-thumb">              {/* ← 上のCSSが効く */}
           <Image
             src={src}
             alt={post.title}
