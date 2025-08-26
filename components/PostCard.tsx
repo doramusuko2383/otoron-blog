@@ -7,8 +7,8 @@ export default function PostCard({ post }: { post: any }) {
   return (
     <article className="card overflow-hidden">
       <a href={href} className="block">
-        {/* 16:9 の器 + 最大200pxでクランプ */}
-        <div className="relative aspect-[16/9] w-full max-h-[200px]">
+        {/* 高さ200pxの器 + fill */}
+        <div className="relative w-full h-[200px]">
           <Image
             src={src}
             alt={post.title}
