@@ -12,10 +12,7 @@ export default async function BlogIndex() {
         <h1 className="text-2xl font-bold heading-underline">記事一覧</h1>
 
         {/* auto-fill + minmax で常に複数カラム化 */}
-        <div
-          className="mt-8 grid gap-8"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}
-        >
+        <div className="mt-8 posts-grid">
           {posts.map((p) => (
             <PostCard key={p.slug} post={p} />
           ))}
