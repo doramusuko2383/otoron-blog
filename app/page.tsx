@@ -19,7 +19,7 @@ export default async function BlogIndexPage() {
 
   return (
     <main className="bg-page">
-      <div className="mx-auto max-w-5xl px-4 py-12">
+      <div className="container mx-auto max-w-6xl px-4 py-12">
         <h1 className="text-2xl font-bold mb-6">記事一覧</h1>
 
         <InfinitePosts
@@ -27,7 +27,7 @@ export default async function BlogIndexPage() {
           initialOffset={nextOffset}
           total={total}
           pageSize={PAGE_SIZE}
-          gridClassName="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          gridClassName="posts-grid mt-8"
         />
       </div>
     </main>

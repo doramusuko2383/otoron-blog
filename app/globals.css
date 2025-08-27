@@ -633,49 +633,30 @@ a:hover {
 .prose table{ display:block;width:100%;overflow-x:auto; }
 .prose thead,.prose tbody,.prose tr{ width:max-content; }
 
-/* 一覧のグリッド：必ず複数列にする */
-.posts-grid{
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; /* ←さらに小さく */
-  gap: 1.25rem !important; /* 20px */
-}
-
-/* カードの16:9サムネ（器） */
-.post-card-thumb{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;     /* 高さは幅から自動計算 → 小さく統一 */
-  overflow: hidden;
-  border-radius: 12px;
-  background: #f6f7fb;
-}
-.post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
-
-/* 念のため：.card に grid が残っていたら打ち消す */
-.card{ display: block !important; }
-
-/* 一覧カードのグリッド（保険で） */
-#posts-grid { gap: 1.5rem; }
-/* ========= 強制ホットフィックス ========= */
-
-/* 一覧カードのグリッドを確実にON（過去の display:block を完全に上書き） */
+/* ====== Blog index grid (smaller cards) ====== */
 .posts-grid{
   display:grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-  gap: 16px !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important; /* ←小さくしたい時は 260 / 240 に */
+  gap: 1.25rem !important; /* = 20px */
 }
 
-/* サムネ：常に 16:9 の小ぶりカード。fill でも絶対にハミ出さない */
-.post-card-thumb{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--surface-weak, #f8fafc);
+/* 画面が広い時はさらに詰めるなら（お好みで） */
+@media (min-width: 1280px){
+  .posts-grid{
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  }
 }
-/* next/image(fill) が入るときの保険（必ずトリミング） */
-.post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
+
+/* サムネ 16:9 ＆固定高（カードの高さが暴れない） */
+.post-card-thumb{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;              /* ここで高さを決める */
+  overflow:hidden;
+  border-radius:12px;
+  background:#f0f7fb;
+}
+.post-card-thumb [data-nimg="fill"]{ object-fit:cover; }
 
 /* カード自体をブロック化（リンクで幅が壊れないように） */
 .card{ display:block !important; }

@@ -7,10 +7,10 @@ export default async function BlogIndex() {
   const posts = await getAllPostsMeta();
   return (
     <main className="bg-page">
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="container mx-auto max-w-6xl px-4 py-10">
         <h1 className="text-2xl font-bold">記事一覧</h1>
 
-        <div className="posts-grid mt-6">
+        <div className="posts-grid mt-8">
           {posts.map((p:any) => <PostCard key={p.slug} post={p} />)}
         </div>
       </div>
