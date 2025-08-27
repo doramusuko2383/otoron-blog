@@ -17,7 +17,7 @@ export default function InfinitePosts({
   initialOffset,
   total,
   pageSize,
-  gridClassName = 'mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3',
+  gridClassName = 'posts-grid mt-8',
 }: Props) {
   const [items, setItems] = useState<PostMeta[]>(initialItems);
   const [offset, setOffset] = useState(initialOffset);
