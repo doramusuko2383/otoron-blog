@@ -653,3 +653,6 @@ a:hover {
 
 /* 念のため：.card に grid が残っていたら打ち消す */
 .card{ display: block !important; }
+
+/* 一覧カードのグリッド（保険で） */
+#posts-grid { gap: 1.5rem; }
