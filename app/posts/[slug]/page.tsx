@@ -153,19 +153,19 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     )}
                   </div>
                 </nav>
-
-                {related?.length > 0 && (
-                  <section aria-labelledby="related" className="mt-12">
-                    <h2 id="related" className="text-lg font-semibold">関連記事</h2>
-                    <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                      {related.map((p: any) => (
-                        <PostCard key={p.slug} post={p} />
-                      ))}
-                    </div>
-                  </section>
-                )}
               </div>
             </article>
+
+            {related?.length > 0 && (
+              <section aria-labelledby="related" className="mt-12">
+                <h2 id="related" className="text-base font-semibold mb-4">関連記事</h2>
+                <div className="posts-grid">
+                  {related.map((p: any) => (
+                    <PostCard key={p.slug} post={p} />
+                  ))}
+                </div>
+              </section>
+            )}
         </div>
       </main>
       <script

@@ -633,23 +633,23 @@ a:hover {
 .prose table{ display:block;width:100%;overflow-x:auto; }
 .prose thead,.prose tbody,.prose tr{ width:max-content; }
 
-/* 一覧のグリッドを確実に（取りこぼし対策） */
+/* 一覧のグリッド：必ず複数列にする */
 .posts-grid{
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; /* ←さらに小さく */
   gap: 1.25rem !important; /* 20px */
 }
 
-/* カードのサムネは 16:9。カード幅に応じて自動で高さが決まる（約180px） */
+/* カードの16:9サムネ（器） */
 .post-card-thumb{
   position: relative;
   width: 100%;
-  aspect-ratio: 16/9;              /* ← 高さを比率で固定 */
+  aspect-ratio: 16/9;     /* 高さは幅から自動計算 → 小さく統一 */
   overflow: hidden;
   border-radius: 12px;
   background: #f6f7fb;
 }
 .post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
 
-/* 念のため：.card に grid 指定が残っていたら無効化 */
+/* 念のため：.card に grid が残っていたら打ち消す */
 .card{ display: block !important; }
