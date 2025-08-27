@@ -102,59 +102,56 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </details>
           )}
 
-          <article className="card p-6">
-            {/* 本文カラムだけ中央寄せ＆読み幅制御 */}
-            <div className="prose prose-neutral md:prose-lg mx-auto">
-                <header className="mb-6">
-                  <h1 className="text-2xl font-bold">{post.title}</h1>
-                  <time className="mt-2 block text-sm text-[color:var(--muted)]">
-                    {new Date(post.date).toLocaleDateString("ja-JP")}
-                  </time>
+          <article className="prose prose-neutral md:prose-lg mx-auto max-w-3xl">
+            <header className="mb-6">
+              <h1 className="text-2xl font-bold">{post.title}</h1>
+              <time className="mt-2 block text-sm text-[color:var(--muted)]">
+                {new Date(post.date).toLocaleDateString("ja-JP")}
+              </time>
 
-                  {hero && (
-                    <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-                      <Image
-                        src={hero}
-                        alt={post.title}
-                        fill
-                        priority={false}
-                        sizes="(max-width:640px) 100vw, 768px"
-                        className="object-cover img-reset"
-                      />
-                    </div>
-                  )}
-                </header>
+              {hero && (
+                <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
+                  <Image
+                    src={hero}
+                    alt={post.title}
+                    fill
+                    priority={false}
+                    sizes="(max-width:640px) 100vw, 768px"
+                    className="object-cover img-reset"
+                  />
+                </div>
+              )}
+            </header>
 
-                {post.tags?.length > 0 && (
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {post.tags.map((t: string) => (
-                      <li key={t}>
-                        <TagChip tag={t} />
-                      </li>
-                    ))}
-                  </ul>
+            {post.tags?.length > 0 && (
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {post.tags.map((t: string) => (
+                  <li key={t}>
+                    <TagChip tag={t} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+            <nav className="mt-10 flex justify-between text-sm">
+              <div>
+                {prev && (
+                  <a href={`/blog/posts/${prev.slug}`} className="link-plain">
+                    ← {prev.title}
+                  </a>
                 )}
-
-                <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.html }} />
-
-                <nav className="mt-10 flex justify-between text-sm">
-                  <div>
-                    {prev && (
-                      <a href={`/blog/posts/${prev.slug}`} className="link-plain">
-                        ← {prev.title}
-                      </a>
-                    )}
-                  </div>
-                  <div>
-                    {next && (
-                      <a href={`/blog/posts/${next.slug}`} className="link-plain">
-                        {next.title} →
-                      </a>
-                    )}
-                  </div>
-                </nav>
               </div>
-            </article>
+              <div>
+                {next && (
+                  <a href={`/blog/posts/${next.slug}`} className="link-plain">
+                    {next.title} →
+                  </a>
+                )}
+              </div>
+            </nav>
+          </article>
 
             {related?.length > 0 && (
               <section aria-labelledby="related" className="mt-12">
