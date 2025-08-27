@@ -7,13 +7,12 @@ export default function PostCard({ post }: { post: any }) {
   return (
     <article className="card overflow-hidden">
       <a href={href} className="block group">
-        {/* 16:9の器 + fill */}
         <div className="post-card-thumb">
           <Image
             src={src}
             alt={post.title}
             fill
-            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+            sizes="(min-width:1024px) 25vw, (min-width:640px) 33vw, 100vw" /* ←より小さめ提示 */
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         </div>
