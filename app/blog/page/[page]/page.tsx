@@ -25,9 +25,9 @@ export default async function BlogPagedPage({ params }: { params: { page: string
   return (
     <main className="bg-page">
       <div className="mx-auto max-w-6xl px-4 py-10">
-        <h1 className="text-2xl font-bold text-[color:var(--ink)] heading-underline">記事一覧（{pageNum} / {totalPages}）</h1>
+        <h1 className="text-2xl font-bold text-[color:var(--ink)]">記事一覧（{pageNum} / {totalPages}）</h1>
 
-        <div className="mt-8 posts-grid">
+        <div className="posts-grid mt-6">
           {items.map(p => <PostCard key={p.slug} post={p} />)}
         </div>
 

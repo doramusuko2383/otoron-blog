@@ -94,7 +94,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <main className="bg-page">
-        <div className="mx-auto max-w-6xl px-4 py-10">
+        <article className="post-page py-10">
           {hasTOC && (
             <details className="md:hidden toc-mobile mb-6">
               <summary>目次</summary>
@@ -102,68 +102,69 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </details>
           )}
 
-          <article className="prose prose-neutral md:prose-lg mx-auto max-w-3xl">
-            <header className="mb-6">
-              <h1 className="text-2xl font-bold">{post.title}</h1>
-              <time className="mt-2 block text-sm text-[color:var(--muted)]">
-                {new Date(post.date).toLocaleDateString("ja-JP")}
-              </time>
+          <header className="mb-6">
+            <h1 className="text-2xl font-bold">{post.title}</h1>
+            <time className="mt-2 block text-sm text-[color:var(--muted)]">
+              {new Date(post.date).toLocaleDateString("ja-JP")}
+            </time>
 
-              {hero && (
-                <div className="relative mx-auto mt-4 w-full max-w-3xl overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
-                  <Image
-                    src={hero}
-                    alt={post.title}
-                    fill
-                    priority={false}
-                    sizes="(max-width:640px) 100vw, 768px"
-                    className="object-cover img-reset"
-                  />
-                </div>
+            {hero && (
+              <div className="relative mx-auto mt-4 w-full overflow-hidden rounded-xl border bg-gray-100 aspect-[16/9] max-h-[320px] md:max-h-[380px]">
+                <Image
+                  src={hero}
+                  alt={post.title}
+                  fill
+                  priority={false}
+                  sizes="(max-width:640px) 100vw, 768px"
+                  className="object-cover img-reset"
+                />
+              </div>
+            )}
+          </header>
+
+          {post.tags?.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {post.tags.map((t: string) => (
+                <li key={t}>
+                  <TagChip tag={t} />
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div
+            className="prose prose-neutral max-w-none mt-6"
+            dangerouslySetInnerHTML={{ __html: post.html }}
+          />
+
+          <nav className="mt-10 flex justify-between text-sm">
+            <div>
+              {prev && (
+                <a href={`/blog/posts/${prev.slug}`} className="link-plain">
+                  ← {prev.title}
+                </a>
               )}
-            </header>
+            </div>
+            <div>
+              {next && (
+                <a href={`/blog/posts/${next.slug}`} className="link-plain">
+                  {next.title} →
+                </a>
+              )}
+            </div>
+          </nav>
 
-            {post.tags?.length > 0 && (
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {post.tags.map((t: string) => (
-                  <li key={t}>
-                    <TagChip tag={t} />
-                  </li>
+          {related?.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-base font-semibold mb-4">関連記事</h2>
+              <div className="posts-grid--related">
+                {related.map((p: any) => (
+                  <PostCard key={p.slug} post={p} />
                 ))}
-              </ul>
-            )}
-
-            <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.html }} />
-
-            <nav className="mt-10 flex justify-between text-sm">
-              <div>
-                {prev && (
-                  <a href={`/blog/posts/${prev.slug}`} className="link-plain">
-                    ← {prev.title}
-                  </a>
-                )}
               </div>
-              <div>
-                {next && (
-                  <a href={`/blog/posts/${next.slug}`} className="link-plain">
-                    {next.title} →
-                  </a>
-                )}
-              </div>
-            </nav>
-          </article>
-
-            {related?.length > 0 && (
-              <section aria-labelledby="related" className="mt-12">
-                <h2 id="related" className="text-base font-semibold mb-4">関連記事</h2>
-                <div className="posts-grid">
-                  {related.map((p: any) => (
-                    <PostCard key={p.slug} post={p} />
-                  ))}
-                </div>
-              </section>
-            )}
-        </div>
+            </section>
+          )}
+        </article>
       </main>
       <script
         type="application/ld+json"
