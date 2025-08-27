@@ -94,24 +94,17 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <main className="bg-page">
-        <div className="mx-auto max-w-5xl px-4 py-10">    {/* 余白を左右に少し広げる */}
+        <div className="mx-auto max-w-6xl px-4 py-10">
           {hasTOC && (
             <details className="md:hidden toc-mobile mb-6">
               <summary>目次</summary>
               <TableOfContents headings={post.headings} />
             </details>
           )}
-          <div className={`grid grid-cols-1 gap-8 md:grid-cols-12`}>
-            {hasTOC && (
-              <aside className="hidden md:block md:col-span-4 order-first">
-                <div className="toc-box">
-                  <TableOfContents headings={post.headings} />
-                </div>
-              </aside>
-            )}
 
-            <article className="md:col-span-8 card p-6">
-              <div className="prose prose-neutral md:prose-lg mx-auto">
+          <article className="card p-6">
+            {/* 本文カラムだけ中央寄せ＆読み幅制御 */}
+            <div className="prose prose-neutral md:prose-lg mx-auto">
                 <header className="mb-6">
                   <h1 className="text-2xl font-bold">{post.title}</h1>
                   <time className="mt-2 block text-sm text-[color:var(--muted)]">
@@ -173,7 +166,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 )}
               </div>
             </article>
-          </div>
         </div>
       </main>
       <script

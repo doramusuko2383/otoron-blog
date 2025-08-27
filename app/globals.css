@@ -633,23 +633,23 @@ a:hover {
 .prose table{ display:block;width:100%;overflow-x:auto; }
 .prose thead,.prose tbody,.prose tr{ width:max-content; }
 
-/* 一覧のグリッドを強制（取りこぼし対策） */
+/* 一覧のグリッドを確実に（取りこぼし対策） */
 .posts-grid{
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
   gap: 1.25rem !important; /* 20px */
 }
 
-/* カードの初期 display:grid を無効化（幅バグの元凶） */
-.card{ display: block !important; }
-
-/* サムネ：さらに低めに固定（→視覚的に1/4程度に） */
+/* カードのサムネは 16:9。カード幅に応じて自動で高さが決まる（約180px） */
 .post-card-thumb{
   position: relative;
   width: 100%;
-  height: 150px;            /* ↓ 前回200px → 150px に */
+  aspect-ratio: 16/9;              /* ← 高さを比率で固定 */
+  overflow: hidden;
+  border-radius: 12px;
   background: #f6f7fb;
 }
-@media (min-width: 640px){ .post-card-thumb{ height: 160px; } }  /* sm: */
-@media (min-width:1024px){ .post-card-thumb{ height: 170px; } }  /* lg: */
 .post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
+
+/* 念のため：.card に grid 指定が残っていたら無効化 */
+.card{ display: block !important; }
