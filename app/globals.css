@@ -656,3 +656,47 @@ a:hover {
 
 /* 一覧カードのグリッド（保険で） */
 #posts-grid { gap: 1.5rem; }
+/* ========= 強制ホットフィックス ========= */
+
+/* 一覧カードのグリッドを確実にON（過去の display:block を完全に上書き） */
+.posts-grid{
+  display:grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 16px !important;
+}
+
+/* サムネ：常に 16:9 の小ぶりカード。fill でも絶対にハミ出さない */
+.post-card-thumb{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface-weak, #f8fafc);
+}
+/* next/image(fill) が入るときの保険（必ずトリミング） */
+.post-card-thumb [data-nimg="fill"]{ object-fit: cover; }
+
+/* カード自体をブロック化（リンクで幅が壊れないように） */
+.card{ display:block !important; }
+
+/* 記事ページの本文ブロックを中央寄せ＆幅固定 */
+.post-page{
+  max-width: 760px;           /* ここで左右の広がりを決める */
+  margin-inline: auto;        /* 中央寄せ */
+  padding-inline: 16px;       /* スマホ余白 */
+}
+@media (min-width: 1024px){
+  .post-page{ max-width: 860px; }
+}
+
+/* 関連記事のグリッドも同じ見た目で並べる */
+.posts-grid--related{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* リンクの既定色を抑える（青リンクを落ち着かせる） */
+a{ color: inherit; text-decoration: none; }
+a:hover{ color: var(--brand, #2563eb); text-decoration: underline; text-underline-offset: 3px; }
